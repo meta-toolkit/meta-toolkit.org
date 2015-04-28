@@ -1,0 +1,29 @@
+slda = "/home/sean/projects/slda/"
+liblinear = "/home/sean/projects/liblinear/"
+prefix = "/home/sean/projects/meta-data/"
+stop-words = "/home/sean/projects/meta/data/lemur-stopwords.txt"
+function-words = "/home/sean/projects/meta/data/function-words.txt"
+
+#corpus-type = "file-corpus"
+#dataset = "imdb"
+#list = "imdb"
+#forward-index = "imdb-fwd"
+#inverted-index = "imdb-inv"
+
+corpus-type = "line-corpus"
+dataset = "topics"
+list = "topics"
+forward-index = "topics-fwd"
+inverted-index = "topics-inv"
+
+[[tokenizers]]
+method = "libsvm"
+
+#[[tokenizers]]
+#method = "ngram"
+#ngramOpt = "Word"
+#ngram = 1
+
+#[[tokenizers]]
+#method = "tree"
+#treeOpt = "Subtree"

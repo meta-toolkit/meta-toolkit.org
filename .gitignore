@@ -1,0 +1,17 @@
+deps/
+_site/
+build/
+obj/
+doc/
+*.a
+*.dat
+.*.swp
+*.o
+*.class
+*.pyc
+learn
+features
+search
+lm
+tester
+.*
