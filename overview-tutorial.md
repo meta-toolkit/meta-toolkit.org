@@ -199,7 +199,7 @@ hesitate to contact us!
 
 ## Citing MeTA
 
-For now, please cite the homepage (<http://meta-toolkit.github.io/meta/>) and
+For now, please cite the homepage (<https://meta-toolkit.org>) and
 note which revision you used.
 
 Once (hopefully) we have a paper, you would be able to cite that.
