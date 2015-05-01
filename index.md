@@ -17,11 +17,6 @@ layout: default
  - UTF8 support for analysis on various languages
  - multithreaded algorithms
 
-## Documentation
-
-Doxygen documentation can be found
-[here]({{site.baseurl}}/doxygen/namespaces.html).
-
 ## Project setup
 
 See the [setup guide]({{site.baseurl}}/setup-guide.html) for installation
@@ -36,6 +31,17 @@ We have walkthroughs for the following parts of MeTA:
  - [Search]({{site.baseurl}}/search-tutorial.html)
  - [Classifiers]({{site.baseurl}}/classify-tutorial.html)
  - [Topic Models]({{site.baseurl}}/topic-models-tutorial.html)
+
+## Forum
+
+Visit the [MeTA forum](https://forum.meta-toolkit.org/) to discuss anything
+surrounding the toolkit. You will find user support topics, community-written
+documentation, and the developer discussions here.
+
+## Documentation
+
+Doxygen documentation can be found
+[here]({{site.baseurl}}/doxygen/namespaces.html).
 
 ## Users
 
