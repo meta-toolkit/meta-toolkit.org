@@ -17,20 +17,25 @@ layout: default
  - UTF8 support for analysis on various languages
  - multithreaded algorithms
 
-## Project setup
+## Setup, Tutorials, and Documentation
 
 See the [setup guide]({{site.baseurl}}/setup-guide.html) for installation
 instructions.
 
-## Tutorials
-
-We have walkthroughs for the following parts of MeTA:
+We have walkthrough tutorials for the following parts of MeTA:
 
  - [System Overview]({{site.baseurl}}/overview-tutorial.html)
+ - [Basic Text Analysis]({{site.baseurl}}/profile-tutorial.html)
  - [Analyzers and Filters]({{site.baseurl}}/analyzers-filters-tutorial.html)
  - [Search]({{site.baseurl}}/search-tutorial.html)
  - [Classifiers]({{site.baseurl}}/classify-tutorial.html)
+ - [Online Learning]({{site.baseurl}}/online-learning.html)
+ - [Part-of-Speech Tagging]({{site.baseurl}}/pos-tagging-tutorial.html)
+ - [Parsing]({{site.baseurl}}/parsing-tutorial.html)
  - [Topic Models]({{site.baseurl}}/topic-models-tutorial.html)
+
+Doxygen documentation can be found
+[here]({{site.baseurl}}/doxygen/namespaces.html).
 
 ## Forum
 
