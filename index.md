@@ -109,6 +109,9 @@ presentation](sigir-keynote-zhai.pdf).
  - The Coursera course [Text Retrieval and Search
    Engines](https://www.coursera.org/course/textretrieval) uses MeTA in
    programming assignments available to thousands of students
+ - The Coursera course [Text Mining and
+   Analytics](https://www.coursera.org/course/textanalytics) uses MeTA in its
+   programming assignments as well
  - An upcoming textbook [Text Data Analysis and Management: A Practical
    Introduction to Text Mining and Information
    Retrieval](https://github.com/smassung/text-data-book-comments) showcases the
