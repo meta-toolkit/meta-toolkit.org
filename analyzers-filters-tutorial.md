@@ -1,11 +1,9 @@
 ---
-title: Analyzers and Filters
+title: Analyzers, Tokenizers, and Filters
 layout: page
 category: tut
 order: 3
 ---
-
-## Analyzers, Tokenizers, and Filters
 
 The first step in creating an index over any sort of text data is the
 "tokenization" process. At a high level, this simply means converting your

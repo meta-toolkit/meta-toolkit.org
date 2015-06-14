@@ -5,8 +5,6 @@ layout: page
 order: 4
 ---
 
-## Search in MeTA
-
 At the heart of MeTA lies its indexes. Every piece of data that MeTA's
 algorithms operate on must first reside in an index. In this tutorial, we'll
 walk you through how to create your own `inverted_index` and how to use your

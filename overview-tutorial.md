@@ -5,8 +5,6 @@ category: tut
 order: 1
 ---
 
-## MeTA's goal
-
 Our task is to improve upon and complement the current body of open source
 machine learning and information retrieval software. The existing environment of
 this open source software tends to be quite fragmented.

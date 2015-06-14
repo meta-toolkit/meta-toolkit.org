@@ -5,8 +5,6 @@ order: 0
 category: tut
 ---
 
-# Setup Guide
-
 ## Outline
 - [Mac OS X](#mac-os-x-build-guide)
 - [Ubuntu](#ubuntu-build-guide)
