@@ -11,6 +11,7 @@ category: tut
 - [Mac OS X](#mac-os-x-build-guide)
 - [Ubuntu](#ubuntu-build-guide)
 - [Arch Linux](#arch-linux-build-guide)
+- [Fedora](#fedora-build-guide)
 - [EWS/EngrIT](#ewsengrit-build-guide) (this is UIUC-specific)
 - [Generic Setup Notes](#generic-setup-notes)
 
