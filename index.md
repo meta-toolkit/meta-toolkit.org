@@ -36,6 +36,7 @@ We have walkthroughs for the following parts of MeTA:
  - [Search]({{site.baseurl}}/search-tutorial.html)
  - [Classifiers]({{site.baseurl}}/classify-tutorial.html)
  - [Topic Models]({{site.baseurl}}/topic-models-tutorial.html)
+ - [Language Models]({{site.baseurl}}/language-models-tutorial.html)
 
 ## Users
 
