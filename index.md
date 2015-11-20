@@ -40,9 +40,6 @@ We have walkthroughs for the following parts of MeTA:
 
 ## Users
 
- - The [TIMAN Research Group](http://sifaka.cs.uiuc.edu/ir/) from the [UIUC
-   Computer Science Department](http://cs.illinois.edu/) uses MeTA in their text
-   mining research
  - The Coursera course [Text Retrieval and Search
    Engines](https://www.coursera.org/course/textretrieval) uses MeTA in
    programming assignments available to thousands of students
@@ -50,6 +47,12 @@ We have walkthroughs for the following parts of MeTA:
    Introduction to Text Mining and Information
    Retrieval](https://github.com/smassung/text-data-book-comments) showcases the
    MeTA toolkit with exercises and demos
+ - The UIUC course [CS 410: Text Information
+   Systems](http://times.cs.uiuc.edu/course/410s15/) uses MeTA in some
+   programming assignments
+ - The [TIMAN Research Group](http://sifaka.cs.uiuc.edu/ir/) from the [UIUC
+   Computer Science Department](http://cs.illinois.edu/) uses MeTA in their text
+   mining research
 
 Contact us through our [GitHub issues
 page](https://github.com/meta-toolkit/meta/issues) if you'd like your
