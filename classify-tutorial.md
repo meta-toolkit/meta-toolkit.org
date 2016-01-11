@@ -31,7 +31,7 @@ To create a `forward_index` directly from your corpus input, your
 configuration file would look something like this:
 
 {% highlight toml %}
-corpus-type = "line-corpus"
+corpus = "line.toml"
 dataset = "20newsgroups"
 forward-index = "20news-fwd"
 inverted-index = "20news-inv"
@@ -63,7 +63,7 @@ To create a `forward_index` from data that is already in LIBSVM format,
 your configuration file would look something like this:
 
 {% highlight toml %}
-corpus-type = "line-corpus"
+corpus = "libsvm.toml"
 dataset = "rcv1"
 forward-index = "rcv1-fwd"
 inverted-index = "rcv1-inv"
@@ -239,7 +239,7 @@ namespace classify
 {
 template <>
 std::unique_ptr<classifier>
-    make_multi_indexclassifier<my_classifier>(
+    make_multi_classifier<my_classifier>(
         const cpptoml::table& config,
         std::shared_ptr<index::forward_index> idx,
         std::shared_ptr<index::inverted_index> inv_idx);

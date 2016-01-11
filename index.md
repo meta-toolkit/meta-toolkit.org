@@ -29,14 +29,7 @@ instructions.
 
 ## Tutorials
 
-We have walkthroughs for the following parts of MeTA:
-
- - [System Overview]({{site.baseurl}}/overview-tutorial.html)
- - [Analyzers and Filters]({{site.baseurl}}/analyzers-filters-tutorial.html)
- - [Search]({{site.baseurl}}/search-tutorial.html)
- - [Classifiers]({{site.baseurl}}/classify-tutorial.html)
- - [Topic Models]({{site.baseurl}}/topic-models-tutorial.html)
- - [Language Models]({{site.baseurl}}/language-models-tutorial.html)
+We have walkthroughs for parts of MeTA listed under the **Tutorials** header.
 
 ## Users
 

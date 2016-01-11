@@ -46,7 +46,7 @@ individually.
 Below is the relevant portion of our `config.toml` for this example:
 
 {% highlight toml %}
-corpus-type = "line-corpus"
+corpus = "libsvm.toml"
 dataset = "rcv1"
 forward-index = "rcv1-fwd"
 inverted-index = "rcv1-inv"
