@@ -165,10 +165,9 @@ std::cout << *mdata.get<std::string>("field-name") << std::endl;
 There are several public datasets that we've converted to the `line_corpus`
 format:
 
- - [20newsgroups](http://web.engr.illinois.edu/~massung1/files/20newsgroups.tar.gz),
-   originally from [here](http://qwone.com/~jason/20Newsgroups/).
- - [IMDB Large Movie Review
-   Dataset](http://web.engr.illinois.edu/~massung1/files/imdb.tar.gz),
+ - [20newsgroups](https://meta-toolkit.org/data/20newsgroups.tar.gz), originally
+   from [here](http://qwone.com/~jason/20Newsgroups/).
+ - [IMDB Large Movie Review Dataset](https://meta-toolkit.org/data/imdb.tar.gz),
    originally from [here](http://ai.stanford.edu/~amaas/data/sentiment/).
  - Any [libsvm-formatted
    dataset](http://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/) can be
