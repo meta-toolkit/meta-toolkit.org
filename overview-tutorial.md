@@ -103,6 +103,24 @@ There are currently four corpus input formats:
  - `libsvm_corpus`: if only being used for classification, MeTA can also take
    libsvm-formatted input to create a `forward_index`.
 
+The main toml configuration file has a few other options related to indexing.
+
+{% highlight toml %}
+uninvert = false          # default
+indexer-ram-budget = 1024 # **estimated** total RAM budget for indexing in MB
+                          # always set this lower than your physical RAM!
+{% endhighlight %}
+
+The key `uninvert` (if set to true) will create a `forward_index` by uninverting
+an `inverted_index`. This is useful to set to true if you will be using both
+indexes. If you'll only do classification or topic modeling, setting this to
+false will not create an inverted index unless one is explicitly used.
+
+The `indexer-ram-budget` is approximately how much total memory is allocated
+during the indexing process. If there are four threads and `indexer-ram-budget =
+4096`, then each thread will store 1GB of processed data before it flushes it to
+disk.
+
 ## Metadata
 
 The file `metadata.dat` may optionally accompany a corpus. The `metadata`
