@@ -63,9 +63,9 @@ Analyzers]({{site.baseurl}}/analyzers-filters-tutorial.html) first.
 
 In the main toml configuration file, there is a parameter
 
-```toml
+{% highlight toml %}
 corpus = "name.toml"
-```
+{% endhighlight %}
 
 This is the path to the corpus configuration file, relative to the corpus path.
 Usually, we simply name the corpus config file by the corpus input format type.
@@ -73,13 +73,13 @@ For example, if we are using a line corpus (described below), we would say
 `corpus = "line.toml"`. The file `line.toml` (or whatever it's called) contains
 corpus-specific settings:
 
-```toml
+{% highlight toml %}
 # file: line.toml
 type = "line"
 encoding = "utf-8" # optional; this is the default
 num-docs = 1000    # required for gz-corpus, optional for others
 metadata = [{name = "path", type = "string"}]    # metadata explained later
-```
+{% endhighlight %}
 
 There are currently four corpus input formats:
 
@@ -111,23 +111,23 @@ in `metadata.dat` corresponds to the ordered documents in the corpus, and values
 are tab-separated. Below is a simple `line.toml` corpus config file and
 `metadata.dat` file.
 
-```toml
+{% highlight toml %}
 # file: line.toml
 type = "line"
 num-docs = 4
 metadata = [{name = "path", type = "string"},
             {name = "published", type = "uint"},
             {name = "conference", type = "string"}]
-```
+{% endhighlight %}
 
 Below are the contents of `metadata.dat`:
 
-```
+~~~
 papers/acl-short.txt    2015    ACL
 papers/sigir-submission.txt 2016    SIGIR
 papers/sigir-accepted.txt   2015    SIGIR
 old-papers/nips.txt 2007    NIPS
-```
+~~~
 
 Possible types are `int`, `uint`, `double`, and `string`. Note that the example
 `path` variable isn't necessarily a path to an actual file (since this is a line
@@ -136,11 +136,11 @@ came from.
 
 To access the metadata of an indexed document, simply call
 
-```cpp
+{% highlight cpp %}
 doc_id d_id = // ...
 auto mdata = idx->metadata(d_id);
 std::cout << *mdata.get<std::string>("field-name") << std::endl;
-```
+{% endhighlight %}
 
 ## Datasets
 
