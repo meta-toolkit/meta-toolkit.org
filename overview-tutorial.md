@@ -37,9 +37,9 @@ along any of these dimensions with minimal effort.
 
 ## How does MeTA store data?
 
-All processed data is stored in a `disk_index`. Currently, we have two indexes:
-`forward_index` and `inverted_index`. The former is keyed by document IDs, and
-the latter is keyed by term IDs.
+All processed data is stored in a `disk_index`. Currently, we have two
+index types: `forward_index` and `inverted_index`. The former is keyed by
+document IDs, and the latter is keyed by term IDs.
 
  - `forward_index` is used for applications such as topic modeling and
    most classification tasks
@@ -48,9 +48,10 @@ the latter is keyed by term IDs.
 
 Since each MeTA application takes an index as input, all processed data is
 interchangeable between all the components. This also gives a great advantage to
-classification: **MeTA supports out-of-core classification by default!** If your
-dataset is small enough (like most other toolkits assume), you can use a cache
-such as `no_evict_cache` to keep it all in memory without sacrificing any speed.
+classification: **MeTA supports out-of-core classification by default!** If
+your dataset is small enough (like most other toolkits assume), you can
+load an index into a `dataset` object to keep it all in memory without
+sacrificing any speed.
 
 Index usage is explained in much more detail in the [Search
 Tutorial]({{site.baseurl}}/search-tutorial.html), though it might make more sense
@@ -114,10 +115,12 @@ an `inverted_index`. This is useful to set to true if you will be using both
 indexes. If you'll only do classification or topic modeling, setting this to
 false will not create an inverted index unless one is explicitly used.
 
-The `indexer-ram-budget` is approximately how much total memory is allocated
-during the indexing process. If there are four threads and `indexer-ram-budget =
-4096`, then each thread will store 1GB of processed data before it flushes it to
-disk.
+The `indexer-ram-budget` is *approximately* how much total memory is
+allocated during the indexing process. If there are four threads and
+`indexer-ram-budget = 4096`, then each thread will store 1GB of processed
+data before it flushes it to disk. Note that this limit is currently
+heuristic-based and thus is not a hard limit (though the system does its
+best to adhere to it).
 
 ## Metadata
 
@@ -213,8 +216,8 @@ Analyzers]({{site.baseurl}}/analyzers-filters-tutorial.html).
 
 ## Unit tests
 
-We're using [ctest](http://www.cmake.org/cmake/help/v2.8.8/ctest.html), which is
-configured to run all of MeTA's tests. You may run
+We're using [ctest](https://cmake.org/cmake/help/v3.2/manual/ctest.1.html),
+which is configured to run all of MeTA's tests. You may run
 
 {% highlight bash %}
 ctest --output-on-failure
@@ -243,11 +246,17 @@ is hard to debug. If you'd like to debug with tools such as
 [valgrind](http://valgrind.org/) or [gdb](http://www.sourceware.org/gdb/),
 running `./unit-test` manually is a better option.
 
+## Support
+
+You should use the [MeTA forum](https://forum.meta-toolkit.org) for user
+support. If you have a bug or feature request, see below.
+
 ## Bugs
 
 On GitHub, create an issue and make sure to label it as a bug. Please be as
-detailed as possible. Including a code snippet would be very helpful if
-applicable.
+detailed as possible (including information such as your operating system
+version, version of MeTA, configuration files, etc.). Including a code
+snippet would be very helpful if applicable.
 
 You many also add feature requests the same way, though of course the
 developers will have their own priority for which features are addressed first.
