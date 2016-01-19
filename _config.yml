@@ -6,6 +6,9 @@ subtitle: 'A Modern C++ Data Sciences Toolkit'
 # URL to source code, used in _includes/footer.html
 codeurl: 'https://github.com/meta-toolkit/meta'
 
+# URL to MeTA toolkit forum
+forumurl: 'https://forum.meta-toolkit.org'
+
 # Default categories (in order) to appear in the navigation
 sections: [
     ['tut', 'Tutorials']

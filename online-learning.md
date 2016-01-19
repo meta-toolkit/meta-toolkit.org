@@ -5,8 +5,6 @@ category: tut
 order: 6
 ---
 
-## Online Learning in MeTA
-
 In many cases, the datasets we deal with in large machine learning
 problems are too large to fit into the working-set memory of a modest
 computer. Fortunately, MeTA's use of indexes for storing its data make it

@@ -5,8 +5,6 @@ layout: page
 order: 9
 ---
 
-## Topic Modeling in MeTA
-
 Topic modeling has become an integral part of any text-analyst's toolbox,
 and MeTA will allow you to explore generating topics for any of your
 corpora in a general way. It supports several different flavors of

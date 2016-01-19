@@ -5,8 +5,6 @@ order: 0
 category: tut
 ---
 
-# Setup Guide
-
 ## Outline
 - [Mac OS X](#mac-os-x-build-guide)
 - [Ubuntu](#ubuntu-build-guide)
@@ -72,9 +70,9 @@ cat /etc/issue
 {% endhighlight %}
 
 If it reads "Ubuntu 12.04 LTS" or something of that nature, see the
-[Ubuntu 12.04 LTS Build Guide](#ubuntu-12.04-lts-build-guide). If it reads
+[Ubuntu 12.04 LTS Build Guide](#ubuntu-1204-lts-build-guide). If it reads
 "Ubuntu 14.04 LTS" (or 14.10), see the
-[Ubuntu 14.04 LTS Build Guide](#ubuntu-14.04-lts-build-guide). If your
+[Ubuntu 14.04 LTS Build Guide](#ubuntu-1404-lts-build-guide). If your
 version is less than 12.04 LTS, your operating system is not supported
 (even by your vendor) and you should upgrade to at least 12.04 LTS (or
 14.04 LTS, if possible).

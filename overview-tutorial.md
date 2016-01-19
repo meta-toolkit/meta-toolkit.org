@@ -5,8 +5,6 @@ category: tut
 order: 1
 ---
 
-## MeTA's goal
-
 Our task is to improve upon and complement the current body of open source
 machine learning and information retrieval software. The existing environment of
 this open source software tends to be quite fragmented.
@@ -16,7 +14,7 @@ example of this is the [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/)
 software package for SVMs. While this is the most cited of the open source
 implementations of linear SVMs, it focuses solely on kernel-less methods. If
 presented with a nonlinear classification problem, one would be forced to find a
-different software package that supports kernels (such as the same authors’
+different software package that supports kernels (such as the same authors'
 [LIBSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) package). This places an
 undue burden on the researchers---not only are they required to have a detailed
 understanding of the research problem at hand, but they are now forced to
@@ -270,14 +268,23 @@ that.
 
 ## Developers
 
-[Sean Massung](http://web.engr.illinois.edu/~massung1/) started writing MeTA in
-May 2012 as a tool to help with his senior thesis at UIUC. He is currently a
-graduate student there, working on information retrieval and natural language
-processing with [Professor ChengXiang
-Zhai](http://www.cs.uiuc.edu/homes/czhai/).
+[**Sean Massung**](http://web.engr.illinois.edu/~massung1/) started writing MeTA
+in May 2012 as a tool to help with his senior thesis at UIUC. He is currently a
+computer science PhD student there (since 2013), working with [Professor
+ChengXiang Zhai](http://www.cs.uiuc.edu/homes/czhai/). His research interests
+include information retrieval, natural language processing, and education.
+Specifically, he is currently studying how non-native English speakers write in
+English. Can we determine their native language and offer grammatical error
+corrections?
 
-[Chase Geigle](https://chara.cs.illinois.edu/sites/cgeigle/) still needs to
-write his bio.
+[**Chase Geigle**](https://chara.cs.illinois.edu/sites/cgeigle/) is a computer
+scientist and educator at the University of Illinois at Urbana-Champaign, where
+he is currently pursuing his PhD (starting in 2013). His research interests
+include text mining and machine learning, particularly when applied to the
+domain of education. He is a member of the [Text Information Management and
+Analysis (TIMAN) group](http://sifaka.cs.uiuc.edu/ir/) where he studies under
+the supervision of [Dr. ChengXiang Zhai](http://www.cs.uiuc.edu/~czhai/). He is
+a lead developer on the MeTA toolkit and a self-described C++ aficionado.
 
 ## License
 

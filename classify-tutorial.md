@@ -5,8 +5,6 @@ category: tut
 order: 5
 ---
 
-## Classification in MeTA
-
 Beyond its search and information retrieval capabilities, MeTA also
 provides functionality for performing document classification on your
 corpora. We will start this tutorial by discussing how you can perform

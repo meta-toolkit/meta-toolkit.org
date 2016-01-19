@@ -5,8 +5,6 @@ layout: page
 order: 4
 ---
 
-## Search in MeTA
-
 At the heart of MeTA lies its indexes. Every piece of data that MeTA's
 algorithms operate on must first reside in an index. In this tutorial, we'll
 walk you through how to create your own `inverted_index` and how to use your
@@ -64,7 +62,7 @@ k3 = 500
 {% endhighlight %}
 
 For a list of MeTA's ranking functions, see the
-[index::ranker](http://meta-toolkit.github.io/meta/doxygen/classmeta_1_1index_1_1ranker.html)
+[index::ranker](http://meta-toolkit.org/doxygen/classmeta_1_1index_1_1ranker.html)
 documentation.
 
 ## Using the example apps
@@ -124,7 +122,7 @@ taken to run all the queries.
 ### Relevance judgements
 
 Check out the
-[index::ir_eval](http://meta-toolkit.github.io/meta/doxygen/classmeta_1_1index_1_1ir__eval.html)
+[index::ir_eval](http://meta-toolkit.org/doxygen/classmeta_1_1index_1_1ir__eval.html)
 class if you have relevance judgements for your queries.
 
 The format for the relevance judgements follow the format
@@ -252,7 +250,7 @@ Perhaps you'd like to experiment and write your own ranking function. Any
 rankers you write should subclass `index::ranker` and implement the pure
 virtual function `score_one(const score_data& sd)`. `score_data` is a struct
 that contains useful information to ranking functions. Read up on it
-[here](http://meta-toolkit.github.io/meta/doxygen/structmeta_1_1index_1_1score__data.html).
+[here](http://meta-toolkit.org/doxygen/structmeta_1_1index_1_1score__data.html).
 
 If you would like to be able to create your ranker by specifying it in a
 configuration file, you will need to provide a public static string id member
