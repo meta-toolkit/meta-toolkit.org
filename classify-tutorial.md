@@ -12,16 +12,17 @@ document classification experiments on your data **without writing a single
 line of code**, and then discuss more complicated examples later on.
 
 The first step in setting up your classification task is, of course,
-selecting your corpus. MeTA's built-in `classify` program supports the
-following corpus inputs:
+selecting your corpus. MeTA's built-in `classify` program works with all of
+MeTA's [corpus formats][corpus-formats], giving you a lot of freedom in how
+you decide to store your unprocessed data.
 
-- anything from which an `inverted_index` can be generated
-- pre-processed, libsvm-formatted corpora
+[corpus-formats]: /overview-tutorial.html#corpus-input-formats
 
-MeTA's internal representation for its `forward_index` uses
-libsvm-formatted data, so if you already have your data in this format you
-are encouraged to use it. Otherwise, you can generate libsvm-formatted
-data automatically from any existing `inverted_index`.
+MeTA uses a compressed format for its internal `forward_index`
+representation, but you can at any point in time dump the contents of your
+`forward_index` to a libsvm-formatted data file by using the provided
+`forward-to-libsvm` tool if you would like to feed the data to another tool
+not yet integrated with MeTA itself.
 
 ## Creating a Forward Index From Scratch
 
@@ -40,15 +41,13 @@ ngram = 1
 filter = "default-chain"
 {% endhighlight %}
 
-The process looks something like this: first, an `inverted_index` will be
-created (or loaded if it already exists) over your corpus' data, and then
-it will be un-inverted to create the `forward_index`. The process of
-un-inverting is a one-time cost, and is necessary to provide efficient
-access to the document vectors for the classifiers. Once you have
-generated your `forward_index`, you *never need to generate it again*
-unless you want to change your document representation. Once you have a
-`forward_index`, you can use it with *any* of the classifiers provided by
-MeTA.
+Here, we've specified the locations for an inverted and a forward index,
+and based on our analyzers configuration we can see that we're using
+unigram words as our features. If you want to use more complex feature
+representations, please [refer to the analyzers, tokenizers, and filters
+tutorial][ana-tut] for more information.
+
+[ana-tut]: /analyzers-filters.tutorial.html
 
 ## Creating a Forward Index from LIBSVM Data
 
@@ -71,10 +70,12 @@ method = "libsvm"
 {% endhighlight %}
 
 The `forward_index` will recognize that this is a LIBSVM formatted corpus
-and will simply generate a few metadata structures to ensure efficient
-random access to document vectors. An `inverted_index` is not created
-through this method, and so you will not be able to use classifiers such
-as `knn` that require an `inverted_index`.
+and will simply read the existing features from the corpus and convert them
+into MeTA's internal compressed format. An corresponding `inverted_index`
+cannot be created through this method, and so you will not be able to use
+dual-index classifiers such as `knn` that require an `inverted_index`, but
+most of the regular classifiers that don't require search features will
+work just fine (e.g., SGD and Naive Bayes).
 
 ## Selecting a Classifier
 
@@ -85,8 +86,8 @@ class](doxygen/classmeta_1_1classify_1_1classifier.html) (they are listed
 as subclasses). The public static id member of each class is the
 identifier you would use in the configuration file.
 
-A recommended default configuration is given below, which learns an SVM
-via stochastic gradient descent:
+A recommended default configuration is given below, which learns a linear
+SVM via stochastic gradient descent and uses a one-vs-all reduction:
 
 {% highlight toml %}
 [classifier]
@@ -94,7 +95,6 @@ method = "one-vs-all"
     [classifier.base]
     method = "sgd"
     loss = "hinge"
-    prefix = "sgd-model"
 {% endhighlight %}
 
 Here is an example configuration that uses Naive Bayes:
@@ -143,9 +143,9 @@ japanese    0.968       0.991       0.945
 </div>
 
 ## Online Learning
-If your dataset cannot be loaded into memory, you should look at [the
-online learning tutorial](online-learning.html) for more information about
-how to handle this case.
+If your dataset cannot be loaded into memory in its entirety, you should
+look at [the online learning tutorial](online-learning.html) for more
+information about how to handle this case.
 
 ## Manual Classification
 
@@ -155,36 +155,122 @@ folds), you should interact with the classifiers directly by writing some
 code. Refer to `classify.cpp` and [the API documentation for
 `classifier`](doxygen/classmeta_1_1classify_1_1classifier.html).
 
-Here's a simple example that changes the number of folds to 10:
+The next few sections will guide you through the high level structure of
+the classify APIs.
+
+### Datasets and Dataset Views
+
+A [`dataset` object][dataset] represents a collection of instances that
+have been loaded into memory. This may be the entirety of your corpus or
+just some small segment of it. Typically, you will instantiate `dataset`
+objects by passing in a `forward_index` object to retrieve documents from,
+but you can also create them manually from your own data as well.
+
+[dataset]: doxygen/classmeta_1_1learn_1_1dataset.html
+
+The most common concrete `dataset` type you'll use for classification is
+[the `multiclass_dataset`][multiclass-dataset]. This is a labeled dataset
+with categorical labels (each `instance` has an associated `class_label`,
+which is a string). If you wish to load the entirety of a `forward_index`
+into memory, you can use the single argument constructor like so:
 
 {% highlight cpp %}
-auto f_idx = meta::index::make_index<index::memory_forward_index>(argv[1]);
+using namespace meta;
+
+// parse the configuration file
 auto config = cpptoml::parse_file(argv[1]);
 
-auto class_config = config.get_table("classifier");
-auto classifier = meta::classify::make_classifier(*class_config, f_idx);
+// create or load a forward index
+auto f_idx = index::make_index<index::forward_index>(*config);
 
-auto confusion_mtrx = classifier->cross_validate(f_idx->docs(), 10);
-confusion_mtrx.print();
-confusion_mtrx.print_stats();
+// load in your index into a collection of instances for training/testing
+classify::multiclass_dataset dataset{f_idx};
 {% endhighlight %}
 
-And here's a simple example that uses your own training/test split:
+[multiclass-dataset]: doxygen/classmeta_1_1classify_1_1multiclass__dataset.html
+
+Now that you have a dataset, you can now create [`dataset_view`
+objects][dataset-view] to represent read-only views of parts (or all of) a
+specific `dataset`. These view objects can then passed down to the
+classifiers for either training or testing. The most commonly used
+`dataset_view` object is the `multiclass_dataset`'s [corresponding
+`multiclass_dataset_view`][mutliclass-dataset-view], which is typically
+created from a `multiclass_dataset` and a pair of iterators into that
+dataset indicating the extent that view represents.
+
+For example, if I wanted to have a training set consisting of the first
+half of my data, and a testing set consisting of the second half of my
+data, I can construct a training view and a testing view as follows:
 
 {% highlight cpp %}
-auto f_idx = meta::index::make_index<index::memory_forward_index>(argv[1]);
-auto config = cpptoml::parse_file(argv[1]);
+// an mdv of the first half of the dataset, for training
+classify::multiclass_dataset_view train{dataset, dataset.begin(),
+                                        dataset.begin() + dataset.size() / 2};
 
-auto class_config = config.get_table("classifier");
-auto classifier = meta::classify::make_classifier(*class_config, f_idx);
+// an mdv for the second half of the dataset, for testing
+classify::multiclass_dataset_view test{dataset,
+                                       dataset.begin() + dataset.size() / 2,
+                                       dataset.end()};
+{% endhighlight %}
 
-auto train = /* filter f_idx->docs() for your training set */;
-auto test = /* filter f_idx->docs() for your test set */;
+Creating these views are important to allow for things like shuffling
+without disturbing the underlying data. I can now shuffle both training and
+test sets before I begin training and testing my classifier.
 
-classifier->train(train);
-auto confusion_mtrx = classifier->test(test);
-confusion_mtrx.print();
-confusion_mtrx.print_stats();
+{% highlight cpp %}
+train.shuffle();
+test.shuffle();
+{% endhighlight %}
+
+[dataset-view]: doxygen/classmeta_1_1learn_1_1dataset__view.html
+[multiclass-dataset-view]: doxygen/classmeta_1_1classify_1_1multiclass__dataset__view.html
+
+Now, let's train a classifier and get some statistics about its performance
+on the test set. Classifiers are typically created with a TOML configuration
+group (either read from a file or created programmatically) and a
+corresponding `dataset_view` that represents the training data to use.
+**Construction of a classifier implies training it.**
+
+To train a Naive Bayes classifier, I could do the following:
+
+{% highlight cpp %}
+auto cls_cfg = cpptoml::make_table();
+cls_cfg->insert("method", "naive-bayes");
+auto cls = classify::make_classifier(*cls_cfg, train);
+{% endhighlight %}
+
+Finally, to test the classifier I can do the following:
+
+{% highlight cpp %}
+auto confusion_mtrx = cls->test(test);
+confusion_mtrx.print();       // prints the confusion matrix itself
+confusion_mtrx.print_stats(); // prints statistics from the matrix
+{% endhighlight %}
+
+If I wanted to instead do 10-fold cross validation on the dataset I
+initially loaded, I could do the following:
+
+{% highlight cpp %}
+auto confusion_mtrx = classify::cross_validate(*cls_cfg, dataset, 10);
+{% endhighlight %}
+
+Once your model is trained, you may wish to save it for later use. All of
+our classifiers support being serialized to the disk. To do so, you can use
+the `save()` method like so:
+
+{% highlight cpp %}
+// configure and train cls first, and then...
+std::ofstream output{"my-model.dat", std::ios::binary};
+cls->save(output);
+{% endhighlight %}
+
+To load a model from a file, simply use the `load_classifier()` method on a
+binary input stream:
+
+{% highlight cpp %}
+// loading a model from a file
+std::ifstream input{"my-model.dat", std::ios::binary};
+auto loaded_cls = classify::load_classifier(input);
 {% endhighlight %}
 
 ## Writing Your Own Classifiers
