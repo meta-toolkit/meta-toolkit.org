@@ -213,7 +213,7 @@ classify::multiclass_dataset_view test{dataset,
                                        dataset.end()};
 {% endhighlight %}
 
-Creating these views are important to allow for things like shuffling
+Creating these views is important to allow for things like shuffling
 without disturbing the underlying data. I can now shuffle both training and
 test sets before I begin training and testing my classifier.
 
