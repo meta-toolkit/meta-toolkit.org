@@ -194,7 +194,7 @@ objects][dataset-view] to represent read-only views of parts (or all of) a
 specific `dataset`. These view objects can then passed down to the
 classifiers for either training or testing. The most commonly used
 `dataset_view` object is the `multiclass_dataset`'s [corresponding
-`multiclass_dataset_view`][mutliclass-dataset-view], which is typically
+`multiclass_dataset_view`][multiclass-dataset-view], which is typically
 created from a `multiclass_dataset` and a pair of iterators into that
 dataset indicating the extent that view represents.
 
