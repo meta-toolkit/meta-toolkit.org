@@ -225,6 +225,8 @@ test.shuffle();
 [dataset-view]: doxygen/classmeta_1_1learn_1_1dataset__view.html
 [multiclass-dataset-view]: doxygen/classmeta_1_1classify_1_1multiclass__dataset__view.html
 
+### Training and Testing Classifiers
+
 Now, let's train a classifier and get some statistics about its performance
 on the test set. Classifiers are typically created with a TOML configuration
 group (either read from a file or created programmatically) and a
