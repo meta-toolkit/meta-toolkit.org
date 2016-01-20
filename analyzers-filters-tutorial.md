@@ -16,13 +16,12 @@ give you as much power and control over the way your text is analyzed as
 possible. The important components are
 
 - `analyzer`s, which take `document`s from the `corpus` and convert their
-  content into sparse vectors of counts, storing that data back in the
-  `document`,
+  content into sparse vectors of counts;
 - `tokenizer`s, which take a `document`'s content and split it into a
-  stream of tokens, and
+  stream of tokens; and
 - `filter`s, which take a stream of tokens, perform operations on them
   (like stemming, filtering, and other mutations), and also produce a
-  stream of tokens
+  stream of tokens.
 
 An `analyzer`, in most cases, will take a "filter chain" that is used to
 generate the final tokens for its tokenization process: the filter chains
