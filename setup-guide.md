@@ -467,8 +467,8 @@ system.
 
 ## Generic Setup Notes
 
- - There are rules for clean, tidy, and doc. **After you run the cmake command
-   once, you will be able to just run `make` as usual** when you're
+ - There are rules for clean, tidy, and doc. **After you run the `cmake`
+   command once, you will be able to just run `make` as usual** when you're
    developing---it'll detect when the CMakeLists.txt file has changed and
    rebuild Makefiles if it needs to.
 
@@ -476,4 +476,14 @@ system.
    appropriate `cmake` command for your OS above and rebuild using `make`
    after.
 
+ - Don't hesitate to reach out on [the forum][forum] if you encounter
+   problems getting set up. We routinely build with a wide variety of
+   compilers and operating systems through our continuous integration
+   setups ([travis-ci][travis-ci] for Linux and OS X and
+   [Appveyor][appveyor] for Windows), so we can be fairly certain that
+   things should build on nearly all major platforms.
+
 [homebrew]: http://brew.sh
+[forum]: https://forum.meta-toolkit.org
+[travis-ci]: https://travis-ci.org/meta-toolkit/meta
+[appveyor]: https://ci.appveyor.com/project/skystrife/meta
