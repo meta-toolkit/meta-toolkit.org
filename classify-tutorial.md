@@ -160,7 +160,7 @@ the classify APIs.
 
 ### Datasets and Dataset Views
 
-A [`dataset` object][dataset] represents a collection of instances that
+A [`dataset` object][dataset] represents a collection of `instance`s that
 have been loaded into memory. This may be the entirety of your corpus or
 just some small segment of it. Typically, you will instantiate `dataset`
 objects by passing in a `forward_index` object to retrieve documents from,
@@ -183,7 +183,7 @@ auto config = cpptoml::parse_file(argv[1]);
 // create or load a forward index
 auto f_idx = index::make_index<index::forward_index>(*config);
 
-// load in your index into a collection of instances for training/testing
+// load your index into a collection of instances for training/testing
 classify::multiclass_dataset dataset{f_idx};
 {% endhighlight %}
 
@@ -277,27 +277,64 @@ auto loaded_cls = classify::load_classifier(input);
 
 ## Writing Your Own Classifiers
 
-Any classifiers you write should subclass `classify::classifier` and
-implement its virtual methods. You should be clear as to whether your
-classifier directly supports multi-class classification (subclass from
-`classify::classifier` directly) or only binary classification (sublcass
-from `classify::binary_classifier`).
+The first step for writing your own classifier is to determine what *kind*
+of classifier you are writing. You should ask yourself the following
+questions:
 
-If you would like to be able to create your classifier by specifying it in
-a configuration file, you will need to provide a public static id member
-that specifies the text that identifies your classifier class, and
-register it with the toolkit somewhere in `main()` like this:
+1. Does your classifier predict categorical labels or binary labels?
+2. Does your classifier support online learning or only batch learning?
+
+Based on the answers, you should pick one of the following base classes:
+
+- `classifier` is the base class you should use for multiclass
+  (categorical) classifiers that *do not* support online learning
+- `online_classifier` is the base class you should use for multiclass
+    classifiers that *do* support online learning
+- `binary_classifier` is the base class you should use for binary
+    classifiers that *do not* support online learning
+- `online_binary_classifier` is the base class you should use for binary
+    classifiers that *do* support online learning
+
+For registration purposes (more on this later), your classifier should have
+a public static `id` member of type `util::string_view` that is unique.
+
+To facilitate saving and loading classifiers, your classifier should have a
+`save(std::ostream&)` function that writes out your classifier's model
+information in binary format to the stream parameter (we strongly recommend
+using something like `io::packed::write` for this). **The very first line
+of this should write out the classifier's id** like so:
 
 {% highlight cpp %}
-// if you have a multi-class classifier
-meta::classify::register_classifier<my_classifier>();
+io::packed::write(out, id);
+{% endhighlight %}
 
-// if you have a multi-class classifier that requires an
-// inverted_index
-meta::classify::register_multi_index_classifier<my_classifier>();
+This allows the toolkit to be able to load your classifier from a file
+directly, without having to manually specify the type at load time.
+
+You should also have a constructor from a `std::istream&` to load your
+classifier from a file. **The id will have already been read from the
+stream**, so you should begin immediately reading the things you wrote
+*after* the first line of `save()`.
+
+### Registering Classifiers
+
+Once your classifier is written, you should register it with the toolkit to
+enable creating it from a configuration file and loading it from disk. To
+do so, ensure that your classifier has a public static `id` member (of type
+`util::string_view`), and then register it somewhere in `main()` like this:
+
+{% highlight cpp %}
+using namespace meta;
+
+// if you have a multi-class classifier
+classify::register_classifier<my_classifier>();
+
+// if you have a multi-class classifier that requires an inverted_index
+// (this is not common; examples include knn and nearest centroid)
+classify::register_multi_index_classifier<my_classifier>();
 
 // if you have a binary classifier
-meta::classify::register_binary_classifier<my_binary_classifier>();
+classify::register_binary_classifier<my_binary_classifier>();
 {% endhighlight %}
 
 If you need to read parameters from the configuration group given for your
@@ -313,7 +350,7 @@ template <>
 std::unique_ptr<classifier>
     make_classifier<my_classifier>(
         const cpptoml::table& config,
-        std::shared_ptr<index::forward_index> idx);
+        multiclass_dataset_view training);
 }
 }
 
@@ -327,7 +364,7 @@ template <>
 std::unique_ptr<classifier>
     make_multi_classifier<my_classifier>(
         const cpptoml::table& config,
-        std::shared_ptr<index::forward_index> idx,
+        multiclass_dataset_view training,
         std::shared_ptr<index::inverted_index> inv_idx);
 }
 }
@@ -341,9 +378,7 @@ template <>
 std::unique_ptr<classifier>
     make_binary_classifier<my_binary_classifier>(
         const cpptoml::table& config,
-        std::shared_ptr<index::forward_index> idx,
-        class_label positive_label,
-        class_label negative_label);
+        binary_dataset_view training);
 }
 }
 {% endhighlight %}
