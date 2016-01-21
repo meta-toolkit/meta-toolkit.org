@@ -16,7 +16,7 @@ selecting your corpus. MeTA's built-in `classify` program works with all of
 MeTA's [corpus formats][corpus-formats], giving you a lot of freedom in how
 you decide to store your unprocessed data.
 
-[corpus-formats]: /overview-tutorial.html#corpus-input-formats
+[corpus-formats]: overview-tutorial.html#corpus-input-formats
 
 MeTA uses a compressed format for its internal `forward_index`
 representation, but you can at any point in time dump the contents of your
@@ -47,7 +47,7 @@ unigram words as our features. If you want to use more complex feature
 representations, please [refer to the analyzers, tokenizers, and filters
 tutorial][ana-tut] for more information.
 
-[ana-tut]: /analyzers-filters.tutorial.html
+[ana-tut]: analyzers-filters.tutorial.html
 
 ## Creating a Forward Index from LIBSVM Data
 
