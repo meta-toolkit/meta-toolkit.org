@@ -42,7 +42,7 @@ use it, you should specify the following in your configuration file:
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 {% endhighlight %}
 
 This configures your text analysis process to consider unigrams of words
@@ -59,7 +59,7 @@ like the following:
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 
 [[analyzers]]
 method = "ngram-word"
@@ -79,7 +79,7 @@ part-of-speech tags, tree skeleton features, and subtree features.
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 
 [[analyzers]]
 method = "ngram-pos"
@@ -154,19 +154,33 @@ you should first determine what kind of component you want to add.
 To define your own analyzer is to specify your own mechanism for document
 tokenization entirely. This is typically done in cases where analyzing the
 text of a document directly is not sufficient (or not meaningful). A good
-example of the need for a new analyzer is the existing `libsvm_analyzer`,
-which tokenizes documents whose content is actually already pre-processed
-to be in the standard libsvm format. Other examples include the subclasses
-of `tree_analyzer` which operate on pre-processed document trees.
+example of the need for a new analyzer is the existing `tree_analyzer`,
+which tokenizes documents based on counts of parse tree features.
 
-Adding your own analyzer is relatively straightforward: you should
-subclass from `analyzer` and implement the `tokenize(corpus::document)`
-method. One slight caveat to be aware of is that `analyzer`s are required
-to be clonable by the internal implementation, but this is easily solved
-by adapting your subclassing specification from
+#### Boilerplate
+When adding an analyzer, you should first determine the base type to
+subclass from. The base `analyzer<T>` is a template class where `T`
+represents the feature value type. This is a `uint64_t` for the inverted
+index (since it can only support integer count data) and a `double` for the
+forward index (which supports arbitrary floating point feature values).
+
+- If your analyzer is intended to be used for creating *either* an inverted
+    or a forward index (e.g., its feature values are just integers---this
+    is the most common case), your class should itself be a template and
+    inherit from `analyzer<T>`.
+
+- If your analyzer is intended to be used for only creating a forward index
+    (e.g., its feature values are floating point), your class should
+    inherit from `analyzer<double>`.
+
+In most cases, you'll make your analyzer a template class and inherit from
+`analyzer<T>`. There is one slight caveat, however: `analyzer`s are
+required to be clonable by the internal implementation. This is easily
+solved by adapting your subclassing specification from
 
 {% highlight cpp %}
-class my_analyzer : public meta::analyzers::analyzer
+template <class T>
+class my_analyzer : public meta::analyzers::analyzer<T>
 {
     /* things */
 };
@@ -175,32 +189,66 @@ class my_analyzer : public meta::analyzers::analyzer
 to
 
 {% highlight cpp %}
-class my_analyzer : public meta::util::clonable<analyzer, my_analyzer>
+template <class T>
+class my_analyzer : public meta::util::clonable<meta::analyzers::analyzer<T>,
+                                                my_analyzer<T>>
 {
     /* things */
 };
 {% endhighlight %}
 
-and providing a valid copy constructor. (The polymorphic cloning facility
-is taken care of by the base `analyzer` combined with the `util::clonable`
-mixin.)
+and providing a valid copy constructor. The polymorphic cloning facility
+is taken care of by the base `analyzer<T>` combined with the
+`util::clonable` mixin.
 
-Your `tokenize` method is responsible for incrementing the counts of your
-features in the given `corpus::document` object given to the method.
-Features are identified by unique strings.
+Note that, despite your analyzer potentially being a template class, you do
+*not* have to place all of the code for it in the header file (and, in
+fact, we recommend against this). This is because there are only two valid
+instantiations: `uint64_t` and `double`. To enable separation of the code
+into the traditional header/source files, you can use the `extern template`
+feature of C++11. In your header file, after the declaration of your class
+template, you should add the following code:
 
-Your `analyzer` object will be a **thread-local instance** during
-indexing, so be aware that member variables are not shared across threads,
-and that access to any static member variables should be properly
-synchronized. We *strongly encourage* state-less analyzers (that is,
-analyzers that are capable of operating on a single document at a time
-without keeping context information).
+{% highlight cpp %}
+// declare the valid instantiations of this analyzer
+extern template class my_analyzer<uint64_t>;
+extern template class my_analyzer<double>;
+{% endhighlight %}
 
+and in your source file, after the definition of all of your member
+functions, you should add the following code:
+
+{% highlight cpp %}
+// explicitly instantiate this analyzer's types
+template class my_analyzer<uint64_t>;
+template class my_analyzer<double>;
+{% endhighlight %}
+
+#### Implementation
+Most of the work will take place in the
+`tokenize(const corpus::document&, feature_map&)` function, which is
+responsible for taking the content of the document and inserting feature
+identifiers and their values into the `feature_map` given. Feature
+identifiers are unique strings.
+
+Your `analyzer` object will be a **thread-local instance** during indexing,
+so be aware that member variables are *not* shared across threads, and that
+access to any static member variables should be properly synchronized. We
+*strongly encourage* state-less analyzers (that is, analyzers that are
+capable of operating on a single document at a time without keeping context
+information).
+
+#### Registering an Analyzer
 To be able to use your analyzer by specifying it in a configuration file,
-it must be registered with the factory. You can do this by calling the
+it must be registered with the toolkit. You can do this by calling the
 following function in `main()` somewhere before you create your index:
 
 {% highlight cpp %}
+// if your analyzer can be used for both integer and double feature values
+meta::analyzers::register_analyzer<my_analyzer<uint64_t>>();
+meta::analyzers::register_analyzer<my_analyzer<double>>();
+
+// if your analyzer can only be used for double feature values
 meta::analyzers::register_analyzer<my_analyzer>();
 {% endhighlight %}
 
@@ -209,28 +257,89 @@ specifies the string that should be used to identify that analyzer to the
 factory---this id must be unique.
 
 If you require special construction behavior (beyond default
-construction), you may specialize the `make_analyzer()` function for your
-specific analyzer class to extract additional information from the
-configuration file: that specialization would look something like this:
+construction), you should specialize the `analyzer_traits` class. In your
+header file, you should declare the specializations you need. If you're
+analyzer supports both integer and double feature values, you can do the
+following:
 
 {% highlight cpp %}
 namespace meta
 {
 namespace analyzers
 {
-template <>
-std::unique_ptr<analyzer>
-    make_analyzer<my_analyzer>(const cpptoml::table& global,
-                               const cpptoml::table& local);
+template <class T>
+struct analyzer_traits<my_analyzer<T>>
+{
+    static std::unique_ptr<analyzer<T>> create(const cpptoml::table& global,
+                                               const cpptoml::table& config);
+
+};
+
+// declare the valid instantiations of this analyzer's traits class
+extern template struct analyzer_traits<my_analyzer<uint64_t>>;
+extern template struct analyzer_traits<my_analyzer<double>>;
 }
 }
 {% endhighlight %}
 
-The first parameter is the configuration group for the *entire*
-configuration file, and the second parameter is the local configuration
-group for your analyzer block. Generally, you will only use the local
-configuration group unless you need to read some global paths from the
-main configuration file.
+If, however, it only supports double feature values, you can get away with
+
+{% highlight cpp %}
+namespace meta
+{
+namespace analyzers
+{
+
+template <>
+struct analyzer_traits<my_analyzer>
+{
+   static std::unique_ptr<analyzer<double>> create(const cpptoml::table& global,
+                                                   const cpptoml::table& config);
+};
+}
+}
+{% endhighlight %}
+
+in the header file. In your source file, you should write the
+implementation of `create`. For analyzers that are template classes, it
+should look something like
+
+{% highlight cpp %}
+namespace meta
+{
+namespace analyzers
+{
+
+template <class T>
+std::unique_ptr<analyzer<T>> analyzer_traits<my_analyzer<T>>::create(
+    const cpptoml::table& global, const cpptoml::table& config)
+{
+    // your code here
+}
+
+template struct analyzer_traits<my_analyzer<uint64_t>>;
+template struct analyzer_traits<my_analyzer<double>>;
+}
+}
+{% endhighlight %}
+
+and for analyzers only supporting double feature types, it should look
+something like:
+
+{% highlight cpp %}
+template <>
+std::unique_ptr<analyzer<double>> analyzer_traits<my_analyzer>::create(
+    const cpptoml::table& global, const cpptoml::table& config)
+{
+    // your code here
+}
+{% endhighlight %}
+
+The first parameter to `create()` is the configuration group for the
+*entire* configuration file, and the second parameter is the local
+configuration group for your analyzer block. Generally, you will only use
+the local configuration group unless you need to read some global paths
+from the main configuration file.
 
 ### Adding a Tokenizer
 
@@ -248,8 +357,7 @@ to subclass `token_stream` now, and the same clonable caveat remains, so
 your declaration should look something like this:
 
 {% highlight cpp %}
-class my_tokenizer : public meta::util::clonable<token_stream,
-                                                 my_tokenizer>
+class my_tokenizer : public meta::util::clonable<token_stream, my_tokenizer>
 {
     /* things */
 };
