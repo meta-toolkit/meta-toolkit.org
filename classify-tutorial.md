@@ -362,7 +362,7 @@ namespace classify
 {
 template <>
 std::unique_ptr<classifier>
-    make_multi_classifier<my_classifier>(
+    make_multi_index_classifier<my_classifier>(
         const cpptoml::table& config,
         multiclass_dataset_view training,
         std::shared_ptr<index::inverted_index> inv_idx);
