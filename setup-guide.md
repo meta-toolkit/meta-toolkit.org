@@ -434,7 +434,8 @@ software needed for building:
 pacman -Syu git mingw-w64-x86_64-{gcc,cmake,make,icu,jemalloc}
 {% endhighlight %}
 
-To build MeTA, run the following in a MinGW shell:
+Then, exit the shell and launch the "MinGW-w64 Win64" shell. You can obtain
+the toolkit and get started with:
 
 {% highlight bash %}
 # clone the project
