@@ -55,7 +55,7 @@ configuration file used to do inference, the path to the model's `.phi`
 file (which stores $$P(w\mid z)$$ for each $$(w, z)$$), and the number of words
 per topic to output. Below is some sample output for a simple dataset where
 we found two topics and used the default filter chain for text analysis
-(which includes `porter2_stemmer`).
+(which includes `porter2_filter`).
 
 ~~~
 $ ./lda-topics config.toml lda-model.phi 15

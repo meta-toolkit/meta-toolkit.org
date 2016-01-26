@@ -195,7 +195,7 @@ can be modified or transformed. Here are some examples of filters:
    transliteration to each token in the sequence.
  - `list_filter`: this filter either accepts or rejects tokens based on a list.
    For example, you could use a stopword list and reject stopwords.
- - `porter2_stemmer`: this filter transforms each token according to the
+ - `porter2_filter`: this filter transforms each token according to the
    [Porter2 English
    Stemmer](http://snowball.tartarus.org/algorithms/english/stemmer.html) rules.
 
