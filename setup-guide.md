@@ -10,6 +10,7 @@ category: tut
 - [Ubuntu](#ubuntu-build-guide)
 - [Arch Linux](#arch-linux-build-guide)
 - [Fedora](#fedora-build-guide)
+- [CentOS](#centos-build-guide)
 - [EWS/EngrIT](#ewsengrit-build-guide) (this is UIUC-specific)
 - [Windows](#windows-build-guide)
 - [Generic Setup Notes](#generic-setup-notes)
@@ -344,6 +345,78 @@ You can now test the system with the following command:
 {% highlight bash %}
 ctest --output-on-failure
 {% endhighlight %}
+
+## CentOS Build Guide
+MeTA can be built in CentOS 7 and above. CentOS 7 comes with a recent
+enough compiler (GCC 4.8.5), but too old a version of CMake. We'll thus
+install the compiler and related libraries from the package manager and
+install our own more recent `cmake` ourselves.
+
+{% highlight bash %}
+# install build dependencies (this will probably take a while)
+sudo yum install gcc gcc-c++ git make wget zlib-devel epel-release
+sudo yum install jemalloc-devel
+
+wget http://www.cmake.org/files/v3.2/cmake-3.2.0-Linux-x86_64.sh
+sudo sh cmake-3.2.0-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
+{% endhighlight %}
+
+You should be able to run the following commands and see the following
+output:
+
+{% highlight bash %}
+g++ --version
+{% endhighlight %}
+
+should print
+
+    g++ (GCC) 4.8.5 20150623 (Red Hat 4.8.5-4)
+    Copyright (C) 2015 Free Software Foundation, Inc.
+    This is free software; see the source for copying conditions.  There is NO
+    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+and
+
+{% highlight bash %}
+/usr/local/bin/cmake --version
+{% endhighlight %}
+
+should print
+
+    cmake version 3.2.0
+
+    CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+Once the dependencies are all installed, you should be ready to build. Run
+the following commands to get started:
+
+{% highlight bash %}
+# clone the project
+git clone https://github.com/meta-toolkit/meta.git
+cd meta/
+
+# set up submodules
+git submodule update --init --recursive
+
+# set up a build directory
+mkdir build
+cd build
+cp ../config.toml .
+
+# configure and build the project
+/usr/local/bin/cmake ../ -DCMAKE_BUILD_TYPE=Release
+make
+{% endhighlight %}
+
+You can now test the system by running the following command:
+
+{% highlight bash %}
+cp ../config.toml .
+/usr/local/bin/ctest --output-on-failure
+{% endhighlight %}
+
+If everything passes, congratulations! MeTA seems to be working on your
+system.
 
 ## EWS/EngrIT Build Guide
 If you are on a machine managed by Engineering IT at UIUC, you should
