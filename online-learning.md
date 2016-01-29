@@ -130,6 +130,11 @@ Took 4.519s
 </code>
 </div>
 
+As of writing, this can be run on a system with as little as 200MB of RAM,
+where the maximum resident set size was 128MB, a far cry away from the 1.2
+GB training set. Attempting to train a model using LIBLINEAR results in the
+processing being killed when loading in the training set.
+
 This general process should be able to be extended to work with any dataset
 that cannot be fit into memory, provided an appropriate `batch-size` is set
 in the configuration file.
