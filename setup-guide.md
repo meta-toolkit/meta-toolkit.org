@@ -411,7 +411,6 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-cp ../config.toml .
 /usr/local/bin/ctest --output-on-failure
 {% endhighlight %}
 
