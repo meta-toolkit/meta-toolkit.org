@@ -34,6 +34,14 @@ training set is sizeable enough to appreciate the memory usage of the
 toolkit during training: reversing the splits gives us approximately 1.2GB
 of training data to process).
 
+Next, create the corpus configuration file `libsvm.toml` in the same folder
+as `rcv1.dat` with the following content:
+
+{% highlight toml %}
+type = "libsvm-corpus"
+num-docs = 687641
+{% endhighlight %}
+
 The approach we will take here is to run the `sgd` training algorithm
 several times on "mini-batches" of the data. The dataset has a total of
 677399 training examples, and if we loaded these all into memory it would
@@ -44,7 +52,7 @@ individually.
 Below is the relevant portion of our `config.toml` for this example:
 
 {% highlight toml %}
-corpus-type = "line-corpus"
+corpus = "libsvm.toml"
 dataset = "rcv1"
 forward-index = "rcv1-fwd"
 inverted-index = "rcv1-inv"
@@ -63,7 +71,6 @@ method = "one-vs-all"
     [classifier.base]
     method = "sgd"
     loss = "hinge"
-    prefix = "sgd-model"
 {% endhighlight %}
 
 Now, we can run the provided application with `./online-classify
@@ -73,31 +80,61 @@ config.toml`, see results that look something like the following:
 <code>
 <pre>
 $ ./online-classify config.toml
-1395363665: [info]     Loading index from disk: rcv1-fwd
-(/home/chase/projects/meta/src/index/forward_index.cpp:137)
- > Counting lines in file: [================================] 100% ETA 00:00:00
-Training batch 14/14
+Training batch 1/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 2/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 3/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 4/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 5/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 6/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 7/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 8/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 9/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 10/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 11/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 12/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 13/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+ Training batch 14/14
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
+
+ > Loading instances into memory: [=========================] 100% ETA 00:00:00
 
            -1       1
          ------------------
-      -1 | <strong>0.966</strong>    0.0344
-       1 | 0.0274   <strong>0.973</strong>
+      -1 | <strong>0.971</strong>    0.0289
+       1 | 0.0207   <strong>0.979</strong>
 
 ------------------------------------------------
-<strong>Class</strong>       <strong>F1 Score</strong>    <strong>Precision</strong>   <strong>Recall</strong>
+<strong>Class       F1 Score    Precision   Recall</strong>
 ------------------------------------------------
--1          0.968       0.966       0.97
-1           0.97        0.973       0.968
+-1          0.974       0.978       0.971
+1           0.976       0.973       0.979
 ------------------------------------------------
-<strong>Total</strong>       <strong>0.969</strong>       <strong>0.969</strong>       <strong>0.969</strong>
+<strong>Total       0.975       0.975       0.975</strong>
 ------------------------------------------------
-20242 predictions attempted, overall accuracy: 0.969
-Took 119s
+20242 predictions attempted, overall accuracy: 0.975
+Took 4.519s
 </pre>
 </code>
 </div>
 
-At the time of this tutorial's writing, this classification process peaks at
-about 95MB---a far cry away from the 1.2GB training set! This general process
-should be able to be extended to work with any dataset that cannot be fit into
-memory, provided an appropriate `batch-size` is set in the configuration file.
+As of writing, this can be run on a system with as little as 200MB of RAM,
+where the maximum resident set size was 128MB, a far cry away from the 1.2
+GB training set. Attempting to train a model using LIBLINEAR results in the
+processing being killed when loading in the training set.
+
+This general process should be able to be extended to work with any dataset
+that cannot be fit into memory, provided an appropriate `batch-size` is set
+in the configuration file.

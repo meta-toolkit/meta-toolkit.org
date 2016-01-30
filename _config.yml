@@ -1,4 +1,5 @@
 markdown: kramdown
+baseurl: "/develop"
 title: 'MeTA: ModErn Text Analysis'
 subtitle: 'A Modern C++ Data Sciences Toolkit'
 

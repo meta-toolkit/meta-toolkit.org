@@ -22,17 +22,9 @@ layout: default
 See the [setup guide]({{site.baseurl}}/setup-guide.html) for installation
 instructions.
 
-We have walkthrough tutorials for the following parts of MeTA:
+## Tutorials
 
- - [System Overview]({{site.baseurl}}/overview-tutorial.html)
- - [Basic Text Analysis]({{site.baseurl}}/profile-tutorial.html)
- - [Analyzers and Filters]({{site.baseurl}}/analyzers-filters-tutorial.html)
- - [Search]({{site.baseurl}}/search-tutorial.html)
- - [Classifiers]({{site.baseurl}}/classify-tutorial.html)
- - [Online Learning]({{site.baseurl}}/online-learning.html)
- - [Part-of-Speech Tagging]({{site.baseurl}}/pos-tagging-tutorial.html)
- - [Parsing]({{site.baseurl}}/parsing-tutorial.html)
- - [Topic Models]({{site.baseurl}}/topic-models-tutorial.html)
+We have walkthroughs for parts of MeTA listed under the **Tutorials** header.
 
 Doxygen documentation can be found
 [here]({{site.baseurl}}/doxygen/namespaces.html).
@@ -103,9 +95,6 @@ presentation](sigir-keynote-zhai.pdf).
 
 ## Users
 
- - The [TIMAN Research Group](http://sifaka.cs.uiuc.edu/ir/) from the [UIUC
-   Computer Science Department](http://cs.illinois.edu/) uses MeTA in their text
-   mining research
  - The Coursera course [Text Retrieval and Search
    Engines](https://www.coursera.org/course/textretrieval) uses MeTA in
    programming assignments available to thousands of students
@@ -116,6 +105,12 @@ presentation](sigir-keynote-zhai.pdf).
    Introduction to Text Mining and Information
    Retrieval](https://github.com/smassung/text-data-book-comments) showcases the
    MeTA toolkit with exercises and demos
+ - The UIUC course [CS 410: Text Information
+   Systems](http://times.cs.uiuc.edu/course/410s15/) uses MeTA in some
+   programming assignments
+ - The [TIMAN Research Group](http://sifaka.cs.uiuc.edu/ir/) from the [UIUC
+   Computer Science Department](http://cs.illinois.edu/) uses MeTA in their text
+   mining research
 
 Contact us through our [GitHub issues
 page](https://github.com/meta-toolkit/meta/issues) if you'd like your

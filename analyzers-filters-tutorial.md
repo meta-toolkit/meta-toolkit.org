@@ -16,13 +16,12 @@ give you as much power and control over the way your text is analyzed as
 possible. The important components are
 
 - `analyzer`s, which take `document`s from the `corpus` and convert their
-  content into sparse vectors of counts, storing that data back in the
-  `document`,
+  content into sparse vectors of counts;
 - `tokenizer`s, which take a `document`'s content and split it into a
-  stream of tokens, and
+  stream of tokens; and
 - `filter`s, which take a stream of tokens, perform operations on them
   (like stemming, filtering, and other mutations), and also produce a
-  stream of tokens
+  stream of tokens.
 
 An `analyzer`, in most cases, will take a "filter chain" that is used to
 generate the final tokens for its tokenization process: the filter chains
@@ -43,7 +42,7 @@ use it, you should specify the following in your configuration file:
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 {% endhighlight %}
 
 This configures your text analysis process to consider unigrams of words
@@ -60,7 +59,7 @@ like the following:
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 
 [[analyzers]]
 method = "ngram-word"
@@ -80,7 +79,7 @@ part-of-speech tags, tree skeleton features, and subtree features.
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"
 
 [[analyzers]]
 method = "ngram-pos"
@@ -155,16 +154,13 @@ you should first determine what kind of component you want to add.
 To define your own analyzer is to specify your own mechanism for document
 tokenization entirely. This is typically done in cases where analyzing the
 text of a document directly is not sufficient (or not meaningful). A good
-example of the need for a new analyzer is the existing `libsvm_analyzer`,
-which tokenizes documents whose content is actually already pre-processed
-to be in the standard libsvm format. Other examples include the subclasses
-of `tree_analyzer` which operate on pre-processed document trees.
+example of the need for a new analyzer is the existing `tree_analyzer`,
+which tokenizes documents based on counts of parse tree features.
 
-Adding your own analyzer is relatively straightforward: you should
-subclass from `analyzer` and implement the `tokenize(corpus::document)`
-method. One slight caveat to be aware of is that `analyzer`s are required
-to be clonable by the internal implementation, but this is easily solved
-by adapting your subclassing specification from
+Adding your own analyzer is relatively straightforward: you should subclass
+from `analyzer` to start. There is one slight caveat, however: `analyzer`s
+are required to be clonable by the internal implementation. This is easily
+solved by adapting your subclassing specification from
 
 {% highlight cpp %}
 class my_analyzer : public meta::analyzers::analyzer
@@ -176,42 +172,49 @@ class my_analyzer : public meta::analyzers::analyzer
 to
 
 {% highlight cpp %}
-class my_analyzer : public meta::util::clonable<analyzer, my_analyzer>
+class my_analyzer : public meta::util::clonable<meta::analyzers::analyzer,
+                                                my_analyzer>
 {
     /* things */
 };
 {% endhighlight %}
 
-and providing a valid copy constructor. (The polymorphic cloning facility
+and providing a valid copy constructor. The polymorphic cloning facility
 is taken care of by the base `analyzer` combined with the `util::clonable`
-mixin.)
+mixin.
 
-Your `tokenize` method is responsible for incrementing the counts of your
-features in the given `corpus::document` object given to the method.
-Features are identified by unique strings.
+Most of the work will take place in the
+`tokenize(const corpus::document&, featurizer&)` function, which is
+responsible for taking the content of the document and inserting feature
+identifiers and their values into the `featurizer` given. Feature
+identifiers are unique strings, and you should interact with the
+`featurizer` instance by using its `operator()` (see [the Doxygen for
+`featurizer`][featurizer-doxygen]).
 
-Your `analyzer` object will be a **thread-local instance** during
-indexing, so be aware that member variables are not shared across threads,
-and that access to any static member variables should be properly
-synchronized. We *strongly encourage* state-less analyzers (that is,
-analyzers that are capable of operating on a single document at a time
-without keeping context information).
+[featurizer-doxygen]: doxygen/html/classmeta_1_1analyzers_1_1featurizer.html
+
+Your `analyzer` object will be a **thread-local instance** during indexing,
+so be aware that member variables are *not* shared across threads, and that
+access to any static member variables should be properly synchronized. We
+*strongly encourage* state-less analyzers (that is, analyzers that are
+capable of operating on a single document at a time without keeping context
+information).
 
 To be able to use your analyzer by specifying it in a configuration file,
-it must be registered with the factory. You can do this by calling the
+it must be registered with the toolkit. You can do this by calling the
 following function in `main()` somewhere before you create your index:
 
 {% highlight cpp %}
 meta::analyzers::register_analyzer<my_analyzer>();
 {% endhighlight %}
 
-The class `my_analyzer` should also have a static member `id` that
-specifies the string that should be used to identify that analyzer to the
-factory---this id must be unique.
+The class `my_analyzer` should also have a static `util::string_view`
+member `id` that specifies the string that should be used to identify that
+analyzer to the factory---this id must be unique.
 
 If you require special construction behavior (beyond default
-construction), you may specialize the `make_analyzer()` function for your
-specific analyzer class to extract additional information from the
+construction), you should specialize the `make_analyzer()` function for
+your specific analyzer class to extract additional information from the
 configuration file: that specialization would look something like this:
 
 {% highlight cpp %}
@@ -221,17 +224,17 @@ namespace analyzers
 {
 template <>
 std::unique_ptr<analyzer>
-    make_analyzer<my_analyzer>(const cpptoml::table& global,
-                               const cpptoml::table& local);
+make_analyzer<my_analyzer>(const cpptoml::table& global,
+                           const cpptoml::table& local);
 }
 }
 {% endhighlight %}
 
-The first parameter is the configuration group for the *entire*
-configuration file, and the second parameter is the local configuration
-group for your analyzer block. Generally, you will only use the local
-configuration group unless you need to read some global paths from the
-main configuration file.
+The first parameter to `make_analyzer()` is the configuration group for the
+*entire* configuration file, and the second parameter is the local
+configuration group for your analyzer block. Generally, you will only use
+the local configuration group unless you need to read some global paths
+from the main configuration file.
 
 ### Adding a Tokenizer
 
@@ -249,8 +252,7 @@ to subclass `token_stream` now, and the same clonable caveat remains, so
 your declaration should look something like this:
 
 {% highlight cpp %}
-class my_tokenizer : public meta::util::clonable<token_stream,
-                                                 my_tokenizer>
+class my_tokenizer : public meta::util::clonable<token_stream, my_tokenizer>
 {
     /* things */
 };

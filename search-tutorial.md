@@ -16,7 +16,7 @@ By default, there are several fields at the top of your config file. These are
 general settings that deal with paths:
 
 {% highlight toml %}
-prefix = "/home/sean/projects/meta-data/"
+prefix = "../data/"
 libsvm-modules = "../deps/libsvm-modules/"
 punctuation = "../data/sentence-boundaries/sentence-punctuation.txt"
 stop-words = "../data/lemur-stopwords.txt"
@@ -25,30 +25,22 @@ end-exceptions = "../data/sentence-boundaries/sentence-end-exceptions.txt"
 function-words = "../data/function-words.txt"
 {% endhighlight %}
 
-I have set `prefix` to be where I store my datasets. You can leave the other
-paths as they are; they'll work by default.
+This assumes you put the 20 newsgroups dataset in your `meta/data/` directory.
+You can leave the other paths as they are; they'll work by default.
 
 Next, we have a section for the corpus (20newsgroups) and its analyzer.
 
 {% highlight toml %}
-corpus-type = "line-corpus"
+corpus = "line.toml"  # corpus-specific config, described in overview tutorial
 dataset = "20newsgroups"
-#list = "20news"
 forward-index = "20newsgroups-fwd"
 inverted-index = "20newsgroups-inv"
-encoding = "latin-1"
 
 [[analyzers]]
 method = "ngram-word"
 ngram = 1
-filter = "default-chain"
+filter = "default-unigram-chain"  # ignores <s> tags for retrieval
 {% endhighlight %}
-
-`corpus-type` tells MeTA whether our dataset is a `line-corpus` (one doc per
-line in a large file) or a `file-corpus` (each doc is an individual file). If
-you're using a `file-corpus`, you need to specify the `list` parameter
-(commented out above) so MeTA can find the file `20news-full-corpus.txt` in the
-dataset directory.
 
 If the executable needs to search the index, we can add the following to say
 which ranker to use:
@@ -81,8 +73,8 @@ code!** In the root directory of MeTA, there are several example apps that deal
 with creating indexes for search engines or information retrieval tasks:
 
  - `index.cpp`: indexes a corpus
- - `interactive-search.cpp`: searches for documents based on user input
- - `query-runner.cpp`: runs a list of queries specified by a file
+ - `interactive_search.cpp`: searches for documents based on user input
+ - `query_runner.cpp`: runs a list of queries specified by a file
 
 Let's go through these one by one:
 
@@ -236,7 +228,7 @@ Finally, we are able to search our index with our ranker. Let's assume we used
 `std::unique_ptr` to the actual object.
 
 {% highlight cpp %}
-corpus::document query{"[doc path]", doc_id{0}};
+corpus::document query{doc_id{0}};
 query.content("my query text");
 
 auto ranking = ranker->score(*idx, query);
