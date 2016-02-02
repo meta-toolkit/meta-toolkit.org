@@ -74,7 +74,7 @@ corpus-specific settings:
 
 {% highlight toml %}
 # file: line.toml
-type = "line"
+type = "line-corpus"
 encoding = "utf-8" # optional; this is the default
 num-docs = 1000    # required for gz-corpus, optional for others
 metadata = [{name = "path", type = "string"}]    # metadata explained later

@@ -51,7 +51,7 @@ the following:
 
 {% highlight toml %}
 [[analyzers]]
-type = "ngram-pos"
+method = "ngram-pos"
 ngram = 2 # the order n-gram you want to generate
 filter = [{type = "icu-tokenizer"}, {type = "ptb-normalizer"}]
 crf-prefix = "path/to/crf/model/folder"
