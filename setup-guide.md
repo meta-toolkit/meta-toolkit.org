@@ -425,11 +425,10 @@ of research software as modules. The modules provided for GCC and CMake are
 recent enough to build MeTA, so it is actually mostly straightforward.
 
 To set up your dependencies (**you will need to do this every time you log
-back in to the system**), run the following commands:
+back in to the system**), run the following command:
 
 {% highlight bash %}
 module load gcc
-module load cmake/3.4.0
 {% endhighlight %}
 
 Once you have done this, double check your versions by running the
@@ -445,18 +444,6 @@ should output
     Copyright (C) 2013 Free Software Foundation, Inc.
     This is free software; see the source for copying conditions.  There is NO
     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-and
-
-{% highlight bash %}
-cmake --version
-{% endhighlight %}
-
-should output
-
-    cmake version 3.4.0
-
-    CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
 If your versions are correct, you should be ready to build. To get started,
 run the following commands:
@@ -475,14 +462,14 @@ cd build
 cp ../config.toml .
 
 # configure and build the project
-CXX="/software/gcc-4.8.2/bin/g++" cmake ../ -DCMAKE_BUILD_TYPE=Release
+CXX=`which g++` CC=`which gcc` /class/cs225/cmake/bin/cmake ../ -DICU_ROOT=/class/cs225/builds/icu/
 make
 {% endhighlight %}
 
 You can now test the system by running the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
