@@ -142,10 +142,10 @@ metadata = [{name = "path", type = "string"},
 Below are the contents of `metadata.dat`:
 
 ~~~
-papers/acl-short.txt    2015    ACL
-papers/sigir-submission.txt 2016    SIGIR
-papers/sigir-accepted.txt   2015    SIGIR
-old-papers/nips.txt 2007    NIPS
+papers/acl-short.txt	2015	ACL
+papers/sigir-submission.txt	2016	SIGIR
+papers/sigir-accepted.txt	2015	SIGIR
+old-papers/nips.txt	2007	NIPS
 ~~~
 
 Possible types are `int`, `uint`, `double`, and `string`. Note that the example
