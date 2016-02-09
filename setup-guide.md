@@ -98,7 +98,7 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 
 # this will probably take a while
-sudo apt-get install g++ g++-4.8 git make wget libjemalloc-dev
+sudo apt-get install g++ g++-4.8 git make wget libjemalloc-dev zlib1g-dev
 
 wget http://www.cmake.org/files/v3.2/cmake-3.2.0-Linux-x86_64.sh
 sudo sh cmake-3.2.0-Linux-x86_64.sh --prefix=/usr/local
@@ -178,7 +178,7 @@ sudo add-apt-repository ppa:george-edison55/cmake-3.x
 sudo apt-get update
 
 # install dependencies
-sudo apt-get install cmake libicu-dev git libjemalloc-dev
+sudo apt-get install cmake libicu-dev git libjemalloc-dev zlib1g-dev
 {% endhighlight %}
 
 Once the dependencies are all installed, you should double check your
@@ -245,7 +245,7 @@ To install the dependencies, run the following commands.
 
 {% highlight bash %}
 sudo pacman -Sy
-sudo pacman -S clang cmake git icu libc++ make jemalloc
+sudo pacman -S clang cmake git icu libc++ make jemalloc zlib
 {% endhighlight %}
 
 Once the dependencies are all installed, you should be ready to build. Run
@@ -490,7 +490,7 @@ you should run the following commands to download dependencies and related
 software needed for building:
 
 {% highlight bash %}
-pacman -Syu git make mingw-w64-x86_64-{gcc,cmake,icu,jemalloc}
+pacman -Syu git make mingw-w64-x86_64-{gcc,cmake,icu,jemalloc,zlib}
 {% endhighlight %}
 
 Then, exit the shell and launch the "MinGW-w64 Win64" shell. You can obtain
