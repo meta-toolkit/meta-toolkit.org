@@ -216,11 +216,11 @@ Analyzers]({{site.baseurl}}/analyzers-filters-tutorial.html).
 
 ## Unit tests
 
-We're using [ctest](https://cmake.org/cmake/help/v3.2/manual/ctest.1.html),
-which is configured to run all of MeTA's tests. You may run
+We're using [Bandit](http://banditcpp.org/), which is configured to run all
+of MeTA's tests. You may run
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 to execute the unit tests while displaying output from failed tests.
@@ -233,18 +233,11 @@ The file `unit_test.cpp`, takes various tests as parameters. For example,
 
 only runs tests with the string `[inverted-index]` in their description. The
 parameter `--reporter=spec` gives more detailed output on which unit tests are
-being run. All of MeTA's unit tests are powered by
-[Bandit](http://banditcpp.org/).
+being run.
 
 Please note that you must have a valid configuration file (`config.toml`) in the
 project root with `prefix = ../data/`, since many unit tests create input based
 on paths stored there.
-
-You won't normally have to worry about running `./unit-test` yourself since we
-have ctest set up. However, since ctest creates a new process for each test, it
-is hard to debug. If you'd like to debug with tools such as
-[valgrind](http://valgrind.org/) or [gdb](http://www.sourceware.org/gdb/),
-running `./unit-test` manually is a better option.
 
 ## Support
 
