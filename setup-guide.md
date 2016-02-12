@@ -55,7 +55,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
@@ -155,7 +155,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-/usr/local/bin/ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
@@ -231,7 +231,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
@@ -272,7 +272,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
@@ -343,7 +343,7 @@ make
 You can now test the system with the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 ## CentOS Build Guide
@@ -411,7 +411,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-/usr/local/bin/ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
@@ -517,7 +517,7 @@ make
 You can now test the system by running the following command:
 
 {% highlight bash %}
-ctest --output-on-failure
+./unit-test --reporter=spec
 {% endhighlight %}
 
 If everything passes, congratulations! MeTA seems to be working on your
