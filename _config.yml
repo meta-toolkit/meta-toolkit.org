@@ -11,6 +11,7 @@ forumurl: 'https://forum.meta-toolkit.org'
 
 # Default categories (in order) to appear in the navigation
 sections: [
+    ['demo', 'Demos'],
     ['tut', 'Tutorials']
 ]
 

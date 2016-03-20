@@ -18,6 +18,12 @@ code {
     color: inherit;
 }
 
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* see:
  * http://stackoverflow.com/questions/18329010/what-happened-to-nav-header-class
  */
