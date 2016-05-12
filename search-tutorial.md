@@ -175,7 +175,8 @@ code can be found in the demo apps as well.
 This is the simplest way to make an inverted index:
 
 {% highlight cpp %}
-auto idx = index::make_index<index::inverted_index>(argv[1]);
+auto config = cpptoml::parse_file(argv[1]);
+auto idx = index::make_index<index::inverted_index>(*config);
 {% endhighlight %}
 
 This assumes that `argv[1]` is the path to the TOML config file, which is
@@ -192,13 +193,13 @@ Here are two different ways to specify a cache:
 //  make_index are the config file for the index and any parameters for the
 //  cache. In this case, we set the maximum hash table size for the
 //  dblru_cache to be 10000.
-auto idx = index::make_index<index::dblru_inverted_index>(argv[1], 10000);
+auto idx = index::make_index<index::dblru_inverted_index>(*config, 10000);
 
 // Create an inverted index using a splay cache. The arguments forwarded
 //  to make_index are the config file for the index and any parameters
 //  for the cache. In this case, we set the maximum number of nodes in
 //  the splay_cache to be 10000.
-auto idx = index::make_index<index::splay_inverted_index>(argv[1], 10000);
+auto idx = index::make_index<index::splay_inverted_index>(*config, 10000);
 {% endhighlight %}
 
 ### Searching an index
