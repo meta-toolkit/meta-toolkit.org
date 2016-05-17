@@ -58,61 +58,7 @@ Tutorial]({{site.baseurl}}/search-tutorial.html), though it might make more sens
 to read the about [Filters and
 Analyzers]({{site.baseurl}}/analyzers-filters-tutorial.html) first.
 
-## Corpus input formats
-
-In the main toml configuration file, there are two parameters to specify a
-corpus:
-
-{% highlight toml %}
-dataset = "dataset-name"
-corpus = "name.toml"
-{% endhighlight %}
-
-The `dataset` key names a folder under the path `prefix` where the corpus
-data resides. The key `corpus` is the path to the corpus configuration
-file, relative to the corpus path.  Usually, we simply name the corpus
-config file by the corpus input format type.  For example, if we are using
-a line corpus (described below), we would say `corpus = "line.toml"`. The
-file `line.toml` (or whatever it's called) contains corpus-specific
-settings. Below is an example for a line-corpus:
-
-{% highlight toml %}
-# file: line.toml
-type = "line-corpus"
-encoding = "utf-8" # optional; this is the default
-num-docs = 1000    # required for gz-corpus, optional for others
-metadata = [{name = "path", type = "string"}]    # metadata explained later
-{% endhighlight %}
-
-There are currently four corpus input formats (and you can find examples of all
-of these in the data directory for your MeTA checkout once you have built
-the toolkit at least once):
-
- - `line_corpus`: each dataset consists of one or two files:
-   * `corpusname.dat`: each document appears on one line.
-   * `corpusname.dat.labels`: optional file that includes the class or label of
-      the document on each line, again corresponding to the order in
-      `corpusname.dat`. These are the labels that are used for the
-      classification tasks.
- - `gz_corpus`: similar to `line_corpus`, but each of its files and
-    metadata files are compressed using gzip compression:
-    * `corpusname.dat.gz`: compressed version of `corpusname.dat`
-    * `corpusname.dat.labels.gz`: compressed version of
-      `corpusname.dat.labels`
-    * In the `gz.toml` file, you will need to include the `num-docs` parameter.
- - `file_corpus`: each document is its own file. Your corpus configuration
-    file (typically `file.toml`) should specify a `list` key to point MeTA
-    at a list of all of the documents in your corpus. This file,
-    `list-full-corpus.txt` (where list is whatever you set the `list` key
-    to in your configuration file; typically just the name of the corpus
-    again) contains (on each line) a required label for each document
-    followed by the path to the file on disk (separated by a tab or a
-    space). If the documents don't have specified class labels, just
-    precede the line with `[none]` or similar.
- - `libsvm_corpus`: if only being used for classification, MeTA can also take
-   libsvm-formatted input to create a `forward_index`.
-
-The main toml configuration file has a few other options related to indexing.
+The main toml configuration file has a few options related to indexing.
 
 {% highlight toml %}
 uninvert = false          # default
@@ -131,6 +77,109 @@ allocated during the indexing process. If there are four threads and
 data before it flushes it to disk. Note that this limit is currently
 heuristic-based and thus is not a hard limit (though the system does its
 best to adhere to it).
+
+## Corpus input formats
+In the main toml configuration file, there are two parameters to specify a
+corpus:
+
+{% highlight toml %}
+dataset = "dataset-name"
+corpus = "name.toml"
+{% endhighlight %}
+
+The `dataset` key names a folder under the path `prefix` where the corpus
+data resides. The key `corpus` is the path to the corpus configuration
+file, relative to the corpus path.  Usually, we simply name the corpus
+config file by the corpus input format type.  For example, if we are using
+a line corpus (described below), we would say `corpus = "line.toml"`. The
+file `line.toml` (or whatever it's called) contains corpus-specific
+settings. Refer to the corpus-specific documentation below for what it
+should contain.
+
+There are currently four corpus input formats (and you can find examples of all
+of these in the data directory for your MeTA checkout once you have built
+the toolkit at least once).
+
+### Line Corpus
+A `line_corpus` consists of one or two files:
+
+ - `line.toml`: the corpus configuration file
+ - `corpusname.dat`: each document appears on one line.
+ - `corpusname.dat.labels`: optional file that includes the class or label of
+   the document on each line, again corresponding to the order in
+   `corpusname.dat`. These are the labels that are used for the
+   classification tasks.
+
+Below is an example of what `line.toml` might look like:
+
+{% highlight toml %}
+type = "line-corpus"
+encoding = "utf-8" # optional; this is the default
+num-docs = 1000    # optional
+metadata = [{name = "path", type = "string"}]    # metadata explained later
+{% endhighlight %}
+
+### GZipped Line Corpus
+A `gz_corpus` is simlar to a `line_corpus`, but each of its files are
+compressed using gzip compression:
+
+ - `gz.toml`: the corpus configuration file
+ - `corpusname.dat.gz`: a compressed version of `corpusname.dat`
+ - `corpusname.dat.labels.gz`: a compressed version of
+   `corpusname.dat.labels`
+
+Below is an example of what `gz.toml` might look like:
+
+{% highlight toml %}
+type = "gz-corpus"
+encoding = "utf-8" # optional; this is the default
+num-docs = 1000    # required
+metadata = [{name = "path", type = "string"}]    # metadata explained later
+{% endhighlight %}
+
+### File Corpus
+In a `file_corpus`, each document is its own file. Your corpus
+configuration file (typically `file.toml`) should specify a `list` key to
+point MeTA at a list of all of the documents in your corpus. This file,
+`list-full-corpus.txt` (where list is whatever you set the `list` key to in
+your configuration file; typically just the name of the corpus again)
+contains (on each line) a required label for each document followed by the
+path to the file on disk (separated by a tab or a space). If the documents
+don't have specified class labels, just precede the line with `[none]` or
+similar.
+
+For example, your `file.toml` might look like:
+
+{% highlight toml %}
+type = "file-corpus"
+list = "dataset"
+encoding = "utf-8" # optional; this is the default
+num-docs = 1000    # optional
+metadata = [{name = "path", type = "string"}]    # metadata explained later
+{% endhighlight %}
+
+and the file `dataset-full-corpus.txt` might look like:
+
+~~~
+class-label	relative/path/to/document01.txt
+class-label2	relative/path/to/document02.txt
+class-label	relative/path/to/document03.txt
+class-label3	relative/path/to/document04.txt
+~~~
+
+### LIBSVM Corpus
+If only being used for classification, MeTA can also take libsvm-formatted
+input to create a `forward_index`. A `libsvm_corpus` contains the following
+files:
+
+ - `libsvm.toml`: the corpus configuration file
+ - `corpus.dat`: the LIBSVM-formatted data file
+
+The `libsvm.toml` file is very straightforward:
+
+{% highlight toml %}
+type = "libsvm-corpus"
+{% endhighlight %}
 
 ## Metadata
 
@@ -170,6 +219,9 @@ doc_id d_id = // ...
 auto mdata = idx->metadata(d_id);
 std::cout << *mdata.get<std::string>("field-name") << std::endl;
 {% endhighlight %}
+
+If you have no metadata, simply do not specify a `metadata` key in your
+corpus configuration file.
 
 ## Datasets
 
