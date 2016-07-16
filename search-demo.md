@@ -15,9 +15,8 @@ of each document are the score that the ranker has given it. Clicking on a link
 will open the respective Wikipedia article.
 
 The demo code can be found [online on
-GitHub](https://github.com/meta-toolkit/search-app) in the [MeTA toolkit
-organization](https://github.com/meta-toolkit). It makes use of a very simple
-[HTTP server](https://github.com/meta-toolkit/simple-http-server) to connect the
-back end to the front end.
+GitHub](https://github.com/meta-toolkit/metapy-demos) in the [MeTA toolkit
+organization](https://github.com/meta-toolkit). It makes use of MeTA's
+(still experimental) Python bindings to create a simple web application.
 
 ![Search demo](search-demo.png)
