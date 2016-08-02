@@ -33,8 +33,7 @@ Next, we have a section for the corpus (20newsgroups) and its analyzer.
 {% highlight toml %}
 corpus = "line.toml"  # corpus-specific config, described in overview tutorial
 dataset = "20newsgroups"
-forward-index = "20newsgroups-fwd"
-inverted-index = "20newsgroups-inv"
+index = "20newsgroups-idx"
 
 [[analyzers]]
 method = "ngram-word"
