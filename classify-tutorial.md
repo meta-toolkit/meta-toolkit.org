@@ -32,8 +32,7 @@ configuration file would look something like this:
 {% highlight toml %}
 corpus = "line.toml"
 dataset = "20newsgroups"
-forward-index = "20news-fwd"
-inverted-index = "20news-inv"
+index = "20news-idx"
 
 [[analyzers]]
 method = "ngram-word"
@@ -62,8 +61,7 @@ your configuration file would look something like this:
 {% highlight toml %}
 corpus = "libsvm.toml"
 dataset = "rcv1"
-forward-index = "rcv1-fwd"
-inverted-index = "rcv1-inv"
+index = "rcv1-idx"
 
 [[analyzers]]
 method = "libsvm"
@@ -71,7 +69,7 @@ method = "libsvm"
 
 The `forward_index` will recognize that this is a LIBSVM formatted corpus
 and will simply read the existing features from the corpus and convert them
-into MeTA's internal compressed format. An corresponding `inverted_index`
+into MeTA's internal compressed format. A corresponding `inverted_index`
 cannot be created through this method, and so you will not be able to use
 dual-index classifiers such as `knn` that require an `inverted_index`, but
 most of the regular classifiers that don't require search features will

@@ -54,8 +54,7 @@ Below is the relevant portion of our `config.toml` for this example:
 {% highlight toml %}
 corpus = "libsvm.toml"
 dataset = "rcv1"
-forward-index = "rcv1-fwd"
-inverted-index = "rcv1-inv"
+index = "rcv1-idx"
 
 # the size of the mini-batches: this may need to be set empirically based
 # on the amount of memory available on the target system
