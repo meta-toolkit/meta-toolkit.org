@@ -35,6 +35,25 @@ Visit the [MeTA forum](https://forum.meta-toolkit.org/) to discuss anything
 surrounding the toolkit. You will find user support topics, community-written
 documentation, and the developer discussions here.
 
+## Citing
+
+If you used MeTA in your research, we would greatly appreciate a citation for
+our ACL demo paper:
+
+{% highlight latex %}
+@InProceedings{meta-toolkit,
+  author    = {Massung, Sean and Geigle, Chase and Zhai, Cheng{X}iang},
+  title     = { {MeTA: A Unified Toolkit for Text Retrieval and Analysis} },
+  booktitle = {Proceedings of ACL-2016 System Demonstrations},
+  month     = {August},
+  year      = {2016},
+  address   = {Berlin, Germany},
+  publisher = {Association for Computational Linguistics},
+  pages     = {91--96},
+  url       = {http://anthology.aclweb.org/P16-4016}
+}
+{% endhighlight %}
+
 ## Motivation
 
 Recent years have seen a dramatic growth of natural language text data,
@@ -92,25 +111,6 @@ Analytics](https://www.coursera.org/course/textanalytics).
 For more discussion about how search and text analysis are related and how to
 build a general text analysis engine, please see the [this
 presentation](sigir-keynote-zhai.pdf).
-
-## Citing
-
-If you used MeTA in your research, we would greatly appreciate a citation for
-our ACL demo paper:
-
-{% highlight latex %}
-@InProceedings{meta-toolkit,
-  author    = {Massung, Sean and Geigle, Chase and Zhai, Cheng{X}iang},
-  title     = { {MeTA: A Unified Toolkit for Text Retrieval and Analysis} },
-  booktitle = {Proceedings of ACL-2016 System Demonstrations},
-  month     = {August},
-  year      = {2016},
-  address   = {Berlin, Germany},
-  publisher = {Association for Computational Linguistics},
-  pages     = {91--96},
-  url       = {http://anthology.aclweb.org/P16-4016}
-}
-{% endhighlight %}
 
 ## Users
 
