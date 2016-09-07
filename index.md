@@ -43,7 +43,7 @@ our ACL demo paper:
 {% highlight latex %}
 @InProceedings{meta-toolkit,
   author    = {Massung, Sean and Geigle, Chase and Zhai, Cheng{X}iang},
-  title     = { {MeTA: A Unified Toolkit for Text Retrieval and Analysis} },
+  {% raw %}title     = {{MeTA: A Unified Toolkit for Text Retrieval and Analysis}},{% endraw %}
   booktitle = {Proceedings of ACL-2016 System Demonstrations},
   month     = {August},
   year      = {2016},
