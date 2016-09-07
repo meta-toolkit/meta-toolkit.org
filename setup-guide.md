@@ -419,19 +419,18 @@ system.
 
 ## EWS/EngrIT Build Guide
 
-<p class="bg-danger" markdown="1">
-**Note:** Please don't do this if you are able to get MeTA working in *any
-other possible way*, as the EWS filesystem has a habit of being *unbearably
-slow* and increasing compile times by several orders of magnitude. For
-example, comparing the `cmake`, `make`, and `unit-test` steps on my desktop
-vs. EWS gives the following:
-</p>
+**Note:** Please don't do this if you are able to get MeTA working in **any
+other possible way**, as the EWS filesystem has a habit of being
+**unbearably slow** and increasing compile times by several orders of
+magnitude. For example, comparing the `cmake`, `make`, and `unit-test`
+steps on my desktop vs. EWS gives the following:
+{: .bg-danger style="padding: 15px;" }
 
 | system         | `cmake` time | `make` time | `unit-test` time |
-| -------------- |  ----------- | ----------- | ---------------- |
-| **my desktop** | 0m7.523s     | 2m30.715s   | 0m36.631s        |
+| --------------:|  -----------:| -----------:| ----------------:|
+| my desktop     | 0m7.523s     | 2m30.715s   | 0m36.631s        |
 | EWS            | 1m28s        | 11m28.473s  | 1m25.326s        |
-
+{: .table}
 
 If you are on a machine managed by Engineering IT at UIUC, you should
 follow this guide. These systems have software that is too old for building
