@@ -246,23 +246,59 @@ Iterate through `ranking` and display your results!
 
 ## Writing your own ranker
 
-Perhaps you'd like to experiment and write your own ranking function. Any
-rankers you write should subclass `index::ranker` and implement the pure
-virtual function `score_one(const score_data& sd)`. `score_data` is a struct
-that contains useful information to ranking functions. Read up on it
-[here](http://meta-toolkit.org/doxygen/structmeta_1_1index_1_1score__data.html).
+Perhaps you'd like to experiment and write your own ranking function. There
+are two main base classes to pick from when writing your own ranker:
 
-If you would like to be able to create your ranker by specifying it in a
-configuration file, you will need to provide a public static string id member
-that specifies the text that identifies your ranker class, and register it with
-the toolkit somewhere in main() like this:
+- `index::ranking_function` should be used in nearly all cases. The main
+  definition of your ranking function is then provided by the virtual
+  function `score_one(const score_data&sd)`, where `score_data` is a struct
+  that contains useful information for writing ranking functions. You can
+  [read more about it here](http://meta-toolkit.org/doxygen/structmeta_1_1index_1_1score__data.html).
+
+  Note that `score_one` is scoring a *single* matched query term for a
+  document. The `index::ranking_function` base class abstracts away the
+  iteration over the matched postings lists for you.
+
+- `index::ranker` should only be used in the special cases where you need
+  more control over the ranking process than `index::ranking_function` can
+  provided. The function to override here is `rank()`, which must provide
+  the search results directly itself by using the provided
+  `ranker_context`.
+
+In either case, you will also need to provide the following:
+
+1. a public static `id` member of type `util::string_view` that is unique;
+2. a `save(std::ostream&) const` function to save your ranker in binary
+   format to the provided stream; and
+3. a constructor from `std::istream&`.
+
+We recommend using `io::packed` for stream reading/writing functions. Note
+that the very first line of `save()` should be
+
+{% highlight cpp %}
+io::packed::write(out, id);
+{% endhighlight %}
+
+to ensure that your ranker's `id` is written first for reading later. After
+that line, you should write any data to the stream that is necessary for
+re-creating your ranker later.
+
+In your constructor from `std::istream`, **the id will have already been
+read from the stream**, so you should begin immediately reading the things
+you wrote *after* the first line of `save()`.
+
+### Registering Rankers
+
+Once your ranker is written, you should register it with the toolkit to
+enable creating it from a configuration file and loading it from disk. To
+do so, register it somewhere in `main()` like this:
 
 {% highlight cpp %}
 meta::index::register_ranker<my_ranker>();
 {% endhighlight %}
 
-If you need to read parameters from the config group, you should specialize the
-`make_ranker()` function as follows:
+If you need to read parameters from the configuration group, you should
+specialize the `make_ranker()` function as follows:
 
 {% highlight cpp %}
 namespace meta
