@@ -44,7 +44,7 @@ MeTA's GloVe implementation is broken into three steps:
 
 Steps 1 and 2 are one-time, upfront costs. Step 3 can be repeated as many
 times as you would like (to, e.g., construct embeddings of different
-dimensionality) once the vocabulary and co-coccurrence matrix have been
+dimensionality) once the vocabulary and co-occurrence matrix have been
 extracted.
 
 ### Vocabulary Extraction
@@ -56,7 +56,8 @@ configuration file:
 {% highlight toml %}
 [embeddings]
 prefix = "path/to/store/model/files"
-filter = [{type = "icu-tokenizer"}, {type = "lowercase"}]
+filter = [{type = "icu-tokenizer", suppress-tags = "true"},
+          {type = "lowercase"}]
 [embeddings.vocab]
 min-count = 10
 max-size = 400000
@@ -67,9 +68,8 @@ model files. (This path should be created before running the tools.)
 
 The `filter` key is a [filter chain][filter-chains] to use to extract the
 token sequences from your data. You can feel free to change this however
-you would like, but the chain *must* insert sentence markers (\<s\> and
-\</s\>). The chain given above is a reasonable default for learning uncased
-word vectors.
+you would like. The chain given above is a reasonable default for learning
+uncased word vectors.
 
 In the `embeddings.vocab` table, you can specify how to prune your
 vocabulary. Typically, you will either truncate the vocabulary below a
@@ -101,6 +101,8 @@ You can configure a few properties for this process with the following
 {% highlight toml %}
 window-size = 15
 max-ram = 4096
+merge-fanout = 8
+num-threads = 4
 {% endhighlight %}
 
 The `window-size` key indicates the size of the window in which a word is
@@ -114,15 +116,23 @@ exhausted, which is then flushed to disk. Higher values create fewer
 temporary files and make collection faster, but obviously this should be
 set to some value $$\leq$$ available RAM.
 
-To extract the co-coccurrence matrix, you can now run the
-`embedding-coocur` tool:
+The `merge-fanout` key controls the maximum number of temporary chunk files
+that can exist on disk before a multi-way merge is conducted to merge them
+together. The default, if not specified, is 8.
+
+The `num-threads` key controls the number of threads used to extract
+co-occurrence data. By default, this is set to the number of total system
+threads. Each thread is given a `max-ram / num-threads` RAM allowance.
+
+To extract the co-occurrence matrix, you can now run the
+`embedding-cooccur` tool:
 
 {% highlight bash %}
-./embedding-coocur config.toml
+./embedding-cooccur config.toml
 {% endhighlight %}
 
 The tool will extract the co-occurrence matrix and write it to the file
-`$prefix/coocur.bin`.
+`$prefix/cooccur.bin`.
 
 ### Embedding Training
 
