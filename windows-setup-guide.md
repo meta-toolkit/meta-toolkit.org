@@ -142,7 +142,7 @@ Now, copy and paste the following command into your MINGW64 shell and then
 hit enter:
 
 {% highlight bash %}
-pacman -Syu git make mingw-w64-x86_64-{gcc,cmake,icu,jemalloc,zlib} --force
+pacman -Syu git make patch mingw-w64-x86_64-{gcc,cmake,icu,jemalloc,zlib} --force
 {% endhighlight %}
 
 [![mingw updating 3](images/windows/step23.png)](images/windows/step23.png)
