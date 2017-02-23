@@ -524,7 +524,7 @@ you should run the following commands to download dependencies and related
 software needed for building:
 
 {% highlight bash %}
-pacman -Syu git make mingw-w64-x86_64-{gcc,cmake,icu,jemalloc,zlib} --force
+pacman -Syu git make patch mingw-w64-x86_64-{gcc,cmake,icu,jemalloc,zlib} --force
 {% endhighlight %}
 
 (the `--force` is needed to work around a bug with the latest MSYS2
