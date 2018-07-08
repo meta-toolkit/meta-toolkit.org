@@ -16,10 +16,10 @@ Requirements:
 - Windows, macOS, or Linux
 - `pip` capable of installing Python wheels
 
-## Hands-on: Topic Models for Retrieval
+## Hands-on: [Topic Models for Retrieval](http://nbviewer.jupyter.org/gist/skystrife/2942c00ba09905320535b3e1e5784ee7)
 
 <script src="https://gist.github.com/skystrife/2942c00ba09905320535b3e1e5784ee7.js"></script>
 
-## Hands-on: Text Mining with Topic Models
+## Hands-on: [Text Mining with Topic Models](http://nbviewer.jupyter.org/gist/skystrife/bf9c75cf0abe1c9a98acaf2d846fc350)
 
 <script src="https://gist.github.com/skystrife/bf9c75cf0abe1c9a98acaf2d846fc350.js"></script>
