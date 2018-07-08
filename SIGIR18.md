@@ -11,6 +11,7 @@ order: 5
 # Hands-on Exercises
 
 Requirements:
+
 - Python (2.7, 3.4, 3.5, or 3.6; 3.7 support soon)
 - Windows, macOS, or Linux
 - `pip` capable of installing Python wheels
