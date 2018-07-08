@@ -1,8 +1,8 @@
 ---
-title: SIGIR 2018 Tutorial: Probabilistic Topic Models
+title: "SIGIR 2018 Tutorial: Probabilistic Topic Models"
 layout: page
 category: demo
-order: 4
+order: 5
 ---
 
 # Presentation
